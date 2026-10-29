@@ -63,5 +63,6 @@ jobs:
           VPS_USER: ${{ secrets.VPS_USER }}
         run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes "$VPS_USER@$VPS_HOST"
 
+      # Dicoba ulang beberapa kali: container butuh beberapa detik setelah dinyalakan ulang
       - name: Cek situs
-        run: curl --fail --silent --show-error --output /dev/null --max-time 30 https://angeliaperfume.duckdns.org/
+        run: curl --fail --silent --show-error --output /dev/null --max-time 30 --retry 10 --retry-delay 3 --retry-all-errors https://angeliaperfume.duckdns.org/
