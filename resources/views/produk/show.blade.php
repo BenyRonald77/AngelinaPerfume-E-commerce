@@ -223,7 +223,7 @@
         </div>
 
         {{-- Deskripsi, pengiriman, garansi --}}
-        <section class="mt-20 flex flex-wrap gap-x-16 gap-y-8" aria-label="Info produk">
+        <section data-reveal class="mt-20 flex flex-wrap gap-x-16 gap-y-8" aria-label="Info produk">
             <div role="tablist" aria-label="Info produk" class="flex w-full gap-1 overflow-x-auto sm:w-[220px] sm:flex-none sm:flex-col sm:overflow-visible"
                  @keydown.arrow-right.prevent="moveTab(1)" @keydown.arrow-down.prevent="moveTab(1)"
                  @keydown.arrow-left.prevent="moveTab(-1)" @keydown.arrow-up.prevent="moveTab(-1)">
@@ -262,11 +262,11 @@
         </section>
 
         @if ($related->isNotEmpty())
-            <section class="mt-20 flex flex-col gap-6" aria-labelledby="judul-terkait">
+            <section data-reveal class="mt-20 flex flex-col gap-6" aria-labelledby="judul-terkait">
                 <h2 id="judul-terkait" class="font-display text-[32px] leading-tight">Kamu mungkin suka</h2>
                 <div class="grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4">
                     @foreach ($related as $item)
-                        <x-product-card :product="$item" />
+                        <x-product-card :product="$item" data-reveal style="--reveal-delay: {{ $loop->index * 80 }}ms" />
                     @endforeach
                 </div>
             </section>

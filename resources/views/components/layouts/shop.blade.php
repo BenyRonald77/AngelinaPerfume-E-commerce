@@ -50,7 +50,8 @@
 
         <header @class(['absolute inset-x-0 top-full text-cream on-dark' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
-            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
+            {{-- Header selebar layar: logo di tepi kiri, cari dan akun di tepi kanan --}}
+            <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
                 <div class="flex items-center justify-between gap-3 py-4">
                     <a href="{{ route('home') }}" class="font-logo text-[26px] leading-tight sm:text-[30px]">Angelia Perfume</a>
 

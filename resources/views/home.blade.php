@@ -27,13 +27,13 @@
         <div aria-hidden="true" class="hero-shade absolute inset-0 -z-10"></div>
         <div aria-hidden="true" class="pointer-events-none absolute bottom-24 left-0 -z-10 select-none whitespace-nowrap font-logo text-[130px] leading-none text-cream/[0.07] sm:text-[220px] lg:bottom-20 lg:text-[300px]">Angelia</div>
 
-        <div class="mx-auto flex w-full max-w-7xl flex-1 items-center px-4 pb-14 pt-32 sm:px-6 lg:px-12 lg:pt-36">
+        <div class="flex w-full flex-1 items-center px-4 pb-14 pt-32 sm:px-6 lg:px-10 lg:pt-36 xl:px-14">
             <div class="flex max-w-xl flex-col items-start gap-6">
-                <h1 class="font-display text-[38px] leading-[1.05] sm:text-[52px] lg:text-[60px]">Wangi favoritmu, cukup mulai <span class="whitespace-nowrap">0,5 ml.</span></h1>
-                <p class="text-lg leading-relaxed text-cream/90 sm:text-[19px]">
+                <h1 class="hero-enter font-display text-[38px] leading-[1.05] sm:text-[52px] lg:text-[60px]">Wangi favoritmu, cukup mulai <span class="whitespace-nowrap">0,5 ml.</span></h1>
+                <p class="hero-enter text-lg leading-relaxed text-cream/90 sm:text-[19px]" style="--reveal-delay: 120ms">
                     Decant dan full size original dari {{ $brandCount }} merek. Coba aromanya dulu dalam botol kecil, lalu pilih botol besar yang paling kamu suka. Reseller resmi MYKONOS, di Shopee sejak 2023.
                 </p>
-                <div class="flex flex-wrap gap-3 pt-2">
+                <div class="hero-enter flex flex-wrap gap-3 pt-2" style="--reveal-delay: 240ms">
                     {{-- Satu-satunya tombol dengan panah: jalur utama ke katalog decant --}}
                     <a href="{{ route('produk.index', ['jenis' => 'decant']) }}"
                        class="inline-flex h-[52px] items-center gap-2 rounded-full bg-cream px-7 font-semibold text-ink transition-colors hover:bg-white active:bg-blush">
@@ -51,9 +51,9 @@
         @if ($bestsellers->isNotEmpty())
             @php($pages = $bestsellers->chunk(3)->values())
             {{-- Strip Terlaris seperti contoh: label + penghitung di kiri, tiga produk per halaman --}}
-            <div class="strip-dark border-t border-white/20" x-data="{ page: 0, total: {{ $pages->count() }} }">
-                <div class="grid lg:grid-cols-[230px_1fr]">
-                    <div class="flex items-center justify-between gap-4 border-b border-white/20 px-4 py-5 sm:px-6 lg:flex-col lg:items-start lg:border-b-0 lg:border-r lg:px-8 lg:py-6">
+            <div class="hero-enter strip-dark border-t border-white/20" style="--reveal-delay: 400ms" x-data="{ page: 0, total: {{ $pages->count() }} }">
+                <div class="grid lg:grid-cols-[minmax(250px,22%)_1fr]">
+                    <div class="flex items-center justify-between gap-4 border-b border-white/20 px-4 py-5 sm:px-6 lg:flex-col lg:items-start lg:border-b-0 lg:border-r lg:py-6 lg:pl-10 lg:pr-8 xl:pl-14">
                         <div class="flex flex-col gap-1">
                             <h2 class="font-display text-[26px] leading-none">Terlaris</h2>
                             <p class="text-[13px] text-cream/80">Paling banyak dibeli di Shopee, Juli–Oktober 2026</p>
@@ -108,13 +108,13 @@
 
     @if ($collections)
         <section aria-labelledby="judul-koleksi" class="mx-auto flex max-w-7xl flex-col items-center gap-10 px-4 pb-10 pt-20 sm:px-6 lg:px-12 lg:pt-24">
-            <div class="flex flex-col items-center gap-2 text-center">
+            <div data-reveal class="flex flex-col items-center gap-2 text-center">
                 <h2 id="judul-koleksi" class="font-display text-[36px] leading-tight lg:text-5xl">Koleksi</h2>
                 <p class="text-lg text-ink-soft">Pilih botol sesuai kebutuhanmu, dari coba-coba sampai koleksi.</p>
             </div>
             <ul class="grid w-full grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-5">
                 @foreach ($collections as $item)
-                    <li>
+                    <li data-reveal style="--reveal-delay: {{ $loop->index * 80 }}ms">
                         <a href="{{ $item['href'] }}" class="group flex flex-col items-center gap-3.5 text-center">
                             <span class="flex h-[132px] w-[132px] items-center justify-center overflow-hidden rounded-full border border-blush bg-white transition-colors group-hover:border-ink sm:h-[148px] sm:w-[148px]">
                                 @if ($item['product']->cover)
@@ -135,14 +135,16 @@
     @endif
 
     <section id="katalog" aria-labelledby="judul-katalog" class="mx-auto flex max-w-7xl flex-col gap-7 px-4 pb-10 pt-14 sm:px-6 lg:px-12">
-        <h2 id="judul-katalog" class="font-display text-[30px] leading-tight lg:text-[40px]">Pilihan untukmu</h2>
-        <livewire:catalog :limit="8" />
+        <h2 id="judul-katalog" data-reveal class="font-display text-[30px] leading-tight lg:text-[40px]">Pilihan untukmu</h2>
+        <div data-reveal style="--reveal-delay: 120ms">
+            <livewire:catalog :limit="8" />
+        </div>
     </section>
 
     @if ($giftRules->isNotEmpty())
         @php($first = $giftRules->first())
         <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-12">
-            <div class="flex flex-wrap items-center justify-between gap-6 rounded-[32px] border border-blush bg-white p-7 sm:p-12">
+            <div data-reveal class="flex flex-wrap items-center justify-between gap-6 rounded-[32px] border border-blush bg-white p-7 sm:p-12">
                 <div class="flex max-w-2xl flex-col gap-2">
                     <h2 class="font-display text-[26px] leading-tight sm:text-4xl">Belanja min. {{ Rupiah::format($first->min_subtotal) }}, dapat {{ \Illuminate\Support\Str::lower(preg_replace('/\s*\(.*\)$/', '', $first->name)) }}.</h2>
                     <p class="text-[17px]">
@@ -160,7 +162,7 @@
     <section aria-label="Jaminan toko" class="mx-auto max-w-7xl px-4 pb-24 pt-10 sm:px-6 lg:px-12">
         <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ($trust as $item)
-                <li class="flex flex-col gap-3">
+                <li data-reveal class="flex flex-col gap-3" style="--reveal-delay: {{ $loop->index * 100 }}ms">
                     <span class="flex h-[52px] w-[52px] items-center justify-center rounded-full border border-blush bg-white">
                         <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">{!! $item['icon'] !!}</svg>
                     </span>
