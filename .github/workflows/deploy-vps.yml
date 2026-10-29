@@ -1,0 +1,67 @@
+name: Deploy ke VPS
+
+# Setiap push ke main: jalankan tes, lalu (bila lulus) jalankan update.sh di VPS testing.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Deploy tidak boleh berjalan bersamaan; push berikutnya menunggu yang sebelumnya selesai
+concurrency:
+  group: deploy-vps
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Tes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: gd, intl, zip, bcmath, pdo_sqlite
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Dependensi PHP
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Build aset (dibutuhkan halaman yang diuji)
+        run: npm ci && npm run build
+
+      - name: Siapkan .env tes
+        run: cp .env.example .env && php artisan key:generate
+
+      - name: php artisan test
+        run: php artisan test
+
+  deploy:
+    name: Deploy ke VPS
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Siapkan SSH
+        env:
+          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+
+      # Kunci ini di VPS dibatasi hanya bisa menjalankan ~/angelia-perfume/update.sh
+      - name: Jalankan update.sh di VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes "$VPS_USER@$VPS_HOST"
+
+      - name: Cek situs
+        run: curl --fail --silent --show-error --output /dev/null --max-time 30 https://angeliaperfume.duckdns.org/
