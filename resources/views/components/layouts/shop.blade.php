@@ -52,22 +52,24 @@
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
             {{-- Header selebar layar: logo di tepi kiri, cari dan akun di tepi kanan --}}
             <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
-                <div class="flex items-center justify-between gap-3 py-4">
-                    <a href="{{ route('home') }}" class="font-logo text-[26px] leading-tight sm:text-[30px]">Angelia Perfume</a>
+                {{-- Tiga kolom di layar lebar: menu tepat di tengah layar, tidak terdorong oleh lebar kotak cari --}}
+                <div class="flex items-center justify-between gap-3 py-4 xl:grid xl:grid-cols-[1fr_auto_1fr]">
+                    <a href="{{ route('home') }}" class="font-logo text-[26px] leading-tight sm:text-[30px] xl:justify-self-start">Angelia Perfume</a>
 
                     <nav aria-label="Menu utama" class="hidden flex-wrap gap-2 md:flex">
                         @foreach ($nav as $item)
                             <a href="{{ $item['href'] }}"
                                @if ($item['active']) aria-current="page" @endif
                                @class([
-                                   'inline-flex min-h-[44px] items-center rounded-full px-[18px] text-[15px] font-medium transition-colors',
+                                   // pt-0.5: huruf League Spartan duduk sedikit tinggi, digeser 1px supaya tepat di tengah pil
+                                   'inline-flex min-h-[44px] items-center rounded-full px-[18px] pt-0.5 text-[15px] font-medium transition-colors',
                                    $pillActive => $item['active'],
                                    $pill => ! $item['active'],
                                ])>{{ $item['label'] }}</a>
                         @endforeach
                     </nav>
 
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 xl:justify-self-end">
                         <form action="{{ route('produk.index') }}" method="get" role="search" class="hidden lg:block">
                             <label for="cari-header" class="sr-only">Cari parfum, merek, atau aroma</label>
                             <div @class(['flex h-11 items-center rounded-full border pl-4 pr-1',
