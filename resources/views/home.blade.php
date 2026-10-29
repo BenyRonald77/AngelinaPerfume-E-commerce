@@ -27,7 +27,7 @@
         <div aria-hidden="true" class="hero-shade absolute inset-0 -z-10"></div>
         <div aria-hidden="true" class="pointer-events-none absolute bottom-24 left-0 -z-10 select-none whitespace-nowrap font-logo text-[130px] leading-none text-cream/[0.07] sm:text-[220px] lg:bottom-20 lg:text-[300px]">Angelia</div>
 
-        <div class="flex w-full flex-1 items-center px-4 pb-14 pt-32 sm:px-6 lg:px-10 lg:pt-36 xl:px-14">
+        <div class="flex w-full flex-1 items-center px-4 pb-14 pt-44 sm:px-6 sm:pt-40 lg:px-10 lg:pt-44 xl:px-14">
             <div class="flex max-w-xl flex-col items-start gap-6">
                 <h1 class="hero-enter font-display text-[38px] leading-[1.05] sm:text-[52px] lg:text-[60px]">Wangi favoritmu, cukup mulai <span class="whitespace-nowrap">0,5 ml.</span></h1>
                 <p class="hero-enter text-lg leading-relaxed text-cream/90 sm:text-[19px]" style="--reveal-delay: 120ms">

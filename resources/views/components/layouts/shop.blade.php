@@ -38,9 +38,13 @@
 <body class="flex min-h-screen flex-col">
     <a href="#isi" class="sr-only z-50 rounded-full bg-ink px-5 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Langsung ke isi</a>
 
-    {{-- Mode overlay (Beranda): header transparan menempel di atas foto hero --}}
-    <div class="relative z-30">
-        <p class="bg-dusty-pink px-4 py-2.5 text-center text-sm text-ink">
+    {{-- Mode overlay (Beranda): bar pengumuman dan header menempel di atas foto hero --}}
+    <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
+        <p @class([
+            'px-4 py-2.5 text-center text-sm',
+            'bar-glass text-cream' => $overlayHeader,
+            'bg-dusty-pink text-ink' => ! $overlayHeader,
+        ])>
             @if ($gift)
                 Free decant otomatis untuk belanja min. {{ Rupiah::format($gift) }} · 100% original · Botol disegel sebelum dikirim
             @else
@@ -48,7 +52,7 @@
             @endif
         </p>
 
-        <header @class(['absolute inset-x-0 top-full text-cream on-dark' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])
+        <header @class(['relative text-cream on-dark' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
             {{-- Header selebar layar: logo di tepi kiri, cari dan akun di tepi kanan --}}
             <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
