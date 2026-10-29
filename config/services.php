@@ -34,6 +34,13 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    // Pembayaran (F6). Kosong = pembayaran online belum aktif; admin bisa menandai lunas manual
+    'xendit' => [
+        'secret_key' => env('XENDIT_SECRET_KEY'),
+        'callback_token' => env('XENDIT_CALLBACK_TOKEN'),
+        'base_url' => env('XENDIT_BASE_URL', 'https://api.xendit.co'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

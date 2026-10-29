@@ -14,6 +14,9 @@ return Application::configure(basePath: dirname(__DIR__))
         // Di VPS aplikasi berada di belakang Caddy (HTTPS); header X-Forwarded-* dipercaya supaya URL
         // dan aset memakai https. Port aplikasi hanya terbuka untuk Caddy, bukan untuk publik.
         $middleware->trustProxies(at: '*');
+
+        // Webhook Xendit diverifikasi lewat x-callback-token, bukan token CSRF
+        $middleware->validateCsrfTokens(except: ['webhooks/xendit']);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -196,17 +196,14 @@
                         </div>
                     @endif
 
-                    {{-- TODO(tahap 3: Belanja): sambungkan ke keranjang dan checkout; sampai itu tombol nonaktif dengan keterangan --}}
-                    <div class="flex flex-col gap-3">
-                        <div class="grid gap-3 sm:grid-cols-2">
-                            <button type="button" class="btn-outline h-14" disabled aria-describedby="info-keranjang">Tambah ke keranjang</button>
-                            <button type="button" class="btn-primary h-14" disabled aria-describedby="info-keranjang">Beli sekarang</button>
-                        </div>
-                        <p id="info-keranjang" class="text-sm text-ink-soft">
-                            Keranjang dan checkout segera hadir. Sementara ini pesan lewat
-                            <a href="{{ config('toko.shopee_url') }}" target="_blank" rel="noopener" class="font-semibold text-ink underline underline-offset-2">toko Shopee kami</a>.
-                        </p>
-                    </div>
+                    {{-- Beli sekarang: masuk keranjang lalu langsung ke checkout (tamu diminta masuk dulu) --}}
+                    <form method="post" action="{{ route('keranjang.store') }}" class="grid gap-3 sm:grid-cols-2">
+                        @csrf
+                        <input type="hidden" name="variant_id" :value="variantId" value="{{ $initial->id }}">
+                        <input type="hidden" name="quantity" :value="qty" value="1">
+                        <button type="submit" class="btn-outline h-14">Tambah ke keranjang</button>
+                        <button type="submit" name="buy_now" value="1" class="btn-primary h-14">Beli sekarang</button>
+                    </form>
                 </div>
 
                 <ul class="flex flex-wrap gap-x-6 gap-y-3 text-sm text-ink-soft">

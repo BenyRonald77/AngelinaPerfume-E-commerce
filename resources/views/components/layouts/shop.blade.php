@@ -16,6 +16,7 @@
     // Di atas foto gelap: pil transparan berteks cream; di header pink: garis ink
     $pill = $overlayHeader ? 'border border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20' : 'border border-ink/25 hover:bg-white/60';
     $pillActive = $overlayHeader ? 'bg-cream text-ink' : 'bg-white';
+    $cartCount = app(\App\Services\CartService::class)->count();
 @endphp
 
 <!DOCTYPE html>
@@ -89,10 +90,22 @@
                             </div>
                         </form>
 
-                        <a href="{{ auth()->check() ? route('dashboard') : route('login') }}"
+                        <a href="{{ auth()->check() ? route('akun') : route('login') }}"
                            aria-label="{{ auth()->check() ? 'Akun saya' : 'Masuk atau daftar' }}"
-                           class="flex h-11 w-11 items-center justify-center rounded-full transition-colors {{ $pill }}">
+                           @if (request()->routeIs('akun*')) aria-current="page" @endif
+                           class="flex h-11 w-11 items-center justify-center rounded-full transition-colors {{ request()->routeIs('akun*') ? $pillActive : $pill }}">
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>
+                        </a>
+
+                        {{-- Jumlah barang diperbarui halaman keranjang lewat event "cart-count" --}}
+                        <a href="{{ route('keranjang') }}" x-data="{ count: {{ $cartCount }} }" @cart-count.window="count = $event.detail.count"
+                           :aria-label="count ? 'Keranjang, ' + count + ' barang' : 'Keranjang kosong'"
+                           aria-label="{{ $cartCount ? "Keranjang, {$cartCount} barang" : 'Keranjang kosong' }}"
+                           @if (request()->routeIs('keranjang', 'checkout')) aria-current="page" @endif
+                           class="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors {{ request()->routeIs('keranjang', 'checkout') ? $pillActive : $pill }}">
+                            <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
+                            <span x-show="count > 0" x-text="count > 99 ? '99+' : count" @if (! $cartCount) style="display: none" @endif
+                                  class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1 pt-px text-xs font-bold text-white ring-2 {{ $overlayHeader ? 'ring-[#2B1E1A]' : 'ring-blush' }}">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
                         </a>
 
                         <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden {{ $pill }}"
@@ -161,11 +174,22 @@
         </div>
     </footer>
 
-    {{-- Pesan bila permintaan Livewire (filter, pencarian) gagal --}}
-    <div x-data="{ pesan: '' }" @toko-error.window="pesan = $event.detail; clearTimeout(window.__tokoErr); window.__tokoErr = setTimeout(() => pesan = '', 6000)"
+    {{-- Pesan singkat: hasil aksi (flash dari server, event "toko-pesan" dari Livewire) dan galat permintaan Livewire.
+         Satu-satunya elemen berbayang di halaman: melayang di atas isi. --}}
+    @php($flash = session('flash_error') ?? session('flash'))
+    <div x-data="{ pesan: @js($flash ?? ''), link: @js(session('flash_cart') && request()->routeIs('produk.*') ? route('keranjang') : ''),
+                   tampil(p, l = '') { this.pesan = p; this.link = l; clearTimeout(this.t); this.t = setTimeout(() => this.pesan = '', 8000) } }"
+         x-init="pesan && tampil(pesan, link)"
+         @toko-error.window="tampil($event.detail)" @toko-pesan.window="tampil($event.detail.pesan ?? $event.detail)"
          class="pointer-events-none fixed inset-x-0 bottom-4 z-50 flex justify-center px-4">
-        <p x-show="pesan" x-cloak x-text="pesan" role="status" aria-live="polite"
-           class="pointer-events-auto rounded-2xl bg-ink px-5 py-3 text-[15px] font-medium text-white shadow-lg"></p>
+        <div x-show="pesan" @if (! $flash) x-cloak @endif role="status" aria-live="polite"
+             class="pointer-events-auto flex max-w-lg items-center gap-4 rounded-2xl bg-ink py-2 pl-5 pr-2 text-[15px] font-medium text-white shadow-lg">
+            <p class="py-1.5" x-text="pesan">{{ $flash }}</p>
+            <a x-show="link" :href="link" class="inline-flex min-h-[44px] shrink-0 items-center rounded-full bg-cream px-4 font-semibold text-ink">Lihat keranjang</a>
+            <button type="button" @click="pesan = ''" aria-label="Tutup pesan" class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-white/10">
+                <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </button>
+        </div>
     </div>
 
     {{-- Skrip halaman (Alpine.data) harus terdaftar sebelum Livewire menyalakan Alpine --}}
@@ -176,7 +200,7 @@
             const kabari = (pesan) => window.dispatchEvent(new CustomEvent('toko-error', { detail: pesan }));
             Livewire.interceptRequest(({ onError, onFailure }) => {
                 onError(({ preventDefault }) => {
-                    kabari('Gagal memuat produk. Muat ulang halaman lalu coba lagi.');
+                    kabari('Permintaan gagal. Muat ulang halaman lalu coba lagi.');
                     @unless (config('app.debug')) preventDefault(); @endunless
                 });
                 onFailure(() => kabari('Koneksi terputus. Periksa internet lalu coba lagi.'));

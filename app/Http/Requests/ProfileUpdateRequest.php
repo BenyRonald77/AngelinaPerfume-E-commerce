@@ -26,6 +26,12 @@ class ProfileUpdateRequest extends FormRequest
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+            'phone' => ['nullable', 'string', 'regex:/^(\+62|62|0)8[0-9]{7,12}$/'],
         ];
+    }
+
+    public function messages(): array
+    {
+        return ['phone.regex' => 'Nomor HP diawali 08 atau +62, contoh 081234567890.'];
     }
 }

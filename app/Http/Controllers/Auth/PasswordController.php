@@ -15,8 +15,9 @@ class PasswordController extends Controller
      */
     public function update(Request $request): RedirectResponse
     {
+        // Akun dari Google belum punya password: boleh langsung mengatur tanpa password lama
         $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
+            'current_password' => $request->user()->password ? ['required', 'current_password'] : ['nullable'],
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
@@ -24,6 +25,6 @@ class PasswordController extends Controller
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('status', 'password-updated');
+        return back()->with('flash', 'Password disimpan.');
     }
 }

@@ -3,16 +3,19 @@
 namespace App\Models;
 
 use App\Enums\Role;
+use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     protected $attributes = [
@@ -54,6 +57,26 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
             'password' => 'hashed',
             'role' => Role::class,
         ];
+    }
+
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class)->orderByDesc('is_primary')->orderBy('id');
+    }
+
+    public function primaryAddress(): HasOne
+    {
+        return $this->hasOne(Address::class)->ofMany(['is_primary' => 'max', 'id' => 'min']);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class)->latest('id');
+    }
+
+    public function cart(): HasOne
+    {
+        return $this->hasOne(Cart::class);
     }
 
     public function isAdmin(): bool
