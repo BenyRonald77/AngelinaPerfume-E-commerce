@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>Detail produk Zataru Signature</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&amp;family=Pacifico&amp;family=Shrikhand&amp;display=swap">
+<style>
+body{margin:0;background:#FFF4F3}
+a{color:#3B2A25;text-decoration:none}a:hover{color:#1F1512}
+</style>
+</helmet>
+<div style="width: 100%; min-height: 100vh; background: #FFF4F3; color: #3B2A25; font-family: 'League Spartan', system-ui, sans-serif; font-size: 16px; line-height: 1.5">
+
+  <div style="background: #F9B6BA; color: #3B2A25">
+    <header style="max-width: 1280px; margin: 0 auto; padding: 18px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+      <a href="Main.dc.html" style="font-family: 'Pacifico', cursive; font-size: 28px; color: #3B2A25; line-height: 1.2">Angelia Perfume</a>
+      <nav aria-label="Menu utama" style="display: flex; flex-wrap: wrap; gap: 28px; font-size: 15px; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase">
+        <a href="Main.dc.html" style="color: #3B2A25; padding: 10px 0">Beranda</a>
+        <a href="#" style="color: #3B2A25; padding: 10px 0">Katalog</a>
+        <a href="#" style="color: #3B2A25; padding: 10px 0; font-weight: 700; text-decoration: underline; text-underline-offset: 6px">Decant</a>
+        <a href="#" style="color: #3B2A25; padding: 10px 0">Full Size</a>
+        <a href="#" style="color: #3B2A25; padding: 10px 0">Bantuan</a>
+      </nav>
+      <div style="display: flex; gap: 4px; align-items: center">
+        <button type="button" aria-label="Cari parfum" style="width: 44px; height: 44px; border: none; border-radius: 999px; background: transparent; color: #3B2A25; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg></button>
+        <a href="#" aria-label="Keranjang" style="width: 44px; height: 44px; border-radius: 999px; color: #3B2A25; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h12l-1 12H7L6 8z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path></svg></a>
+        <a href="#" aria-label="Akun saya" style="width: 44px; height: 44px; border-radius: 999px; color: #3B2A25; display: flex; align-items: center; justify-content: center"><svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg></a>
+      </div>
+    </header>
+  </div>
+
+  <main style="max-width: 1280px; margin: 0 auto; padding: 24px clamp(16px, 4vw, 48px) 80px">
+    <nav aria-label="Breadcrumb" style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 14px; color: #5A4842; padding-bottom: 28px">
+      <a href="Main.dc.html" style="color: #3B2A25">Beranda</a><span aria-hidden="true">›</span><a href="#" style="color: #3B2A25">Decant</a><span aria-hidden="true">›</span><span>Zataru Signature</span>
+    </nav>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: clamp(32px, 5vw, 72px); align-items: start">
+
+      <div style="display: flex; flex-direction: column; gap: 16px">
+        <div style="aspect-ratio: 1 / 1; border-radius: 28px; overflow: hidden; background: #FFFFFF; border: 1px solid rgba(222, 157, 169, 0.45)">
+          <img src="{{mainImg}}" alt="{{mainAlt}}" style="width: 100%; height: 100%; object-fit: cover; display: block">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+          <sc-for list="{{thumbs}}" as="t" hint-placeholder-count="3">
+            <button type="button" onClick="{{t.pick}}" aria-label="{{t.label}}" style="padding: 0; aspect-ratio: 1 / 1; border-radius: 16px; overflow: hidden; background: #FFFFFF; cursor: pointer; border: 2px solid {{t.border}}; opacity: {{t.opacity}}">
+              <img src="{{t.img}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block">
+            </button>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 22px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4842">Decant · Zataru Signature</span>
+          <h1 style="margin: 0; font-family: 'Shrikhand', serif; font-weight: 400; font-size: clamp(36px, 4vw, 52px); line-height: 1.05">{{aromaName}} · {{sizeLabel}}</h1>
+          <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 500">
+            <span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 999px; background: {{stockDot}}"></span>{{stockText}}
+          </span>
+        </div>
+
+        <span style="font-size: 40px; font-weight: 700; line-height: 1">{{priceText}}</span>
+
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 18px; border-radius: 20px; background: #FFFFFF; border: 1px solid rgba(222, 157, 169, 0.45)">
+          <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4842">Top notes</span><span style="font-size: 15px">{{notesTop}}</span></div>
+          <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4842">Middle notes</span><span style="font-size: 15px">{{notesMid}}</span></div>
+          <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A4842">Base notes</span><span style="font-size: 15px">{{notesBase}}</span></div>
+        </div>
+
+        <fieldset style="margin: 0; padding: 0; border: none; display: flex; flex-direction: column; gap: 10px">
+          <legend style="padding: 0 0 10px; font-size: 15px; font-weight: 600">Aroma <span style="font-weight: 400; color: #5A4842">· {{aromaName}}</span></legend>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px">
+            <sc-for list="{{aromas}}" as="a" hint-placeholder-count="4">
+              <button type="button" onClick="{{a.pick}}" aria-pressed="{{a.pressed}}" style="display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 16px 0 6px; border-radius: 999px; cursor: pointer; font-family: inherit; font-size: 15px; font-weight: 500; border: 2px solid {{a.border}}; background: {{a.bg}}; color: #3B2A25">
+                <img src="{{a.crop}}" alt="" style="width: 40px; height: 40px; border-radius: 999px; object-fit: cover">{{a.name}}
+              </button>
+            </sc-for>
+          </div>
+        </fieldset>
+
+        <fieldset style="margin: 0; padding: 0; border: none; display: flex; flex-direction: column; gap: 10px">
+          <legend style="padding: 0 0 10px; font-size: 15px; font-weight: 600">Ukuran</legend>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px">
+            <sc-for list="{{sizes}}" as="s" hint-placeholder-count="5">
+              <button type="button" onClick="{{s.pick}}" aria-pressed="{{s.pressed}}" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 92px; height: 64px; padding: 0 14px; border-radius: 16px; cursor: pointer; font-family: inherit; border: 2px solid {{s.border}}; background: {{s.bg}}; color: {{s.fg}}">
+                <span style="font-size: 16px; font-weight: 600">{{s.label}}</span>
+                <span style="font-size: 13px">{{s.kind}}</span>
+              </button>
+            </sc-for>
+          </div>
+        </fieldset>
+
+        <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+          <span style="font-size: 15px; font-weight: 600">Jumlah</span>
+          <div style="display: inline-flex; align-items: center; gap: 4px; padding: 4px; border-radius: 999px; background: #FFFFFF; border: 1px solid rgba(222, 157, 169, 0.6)">
+            <button type="button" onClick="{{minus}}" aria-label="Kurangi jumlah" style="width: 44px; height: 44px; border: none; border-radius: 999px; background: #FFF4F3; color: #3B2A25; font-size: 22px; cursor: pointer">−</button>
+            <span aria-live="polite" style="min-width: 36px; text-align: center; font-size: 20px; font-weight: 600">{{qty}}</span>
+            <button type="button" onClick="{{plus}}" aria-label="Tambah jumlah" style="width: 44px; height: 44px; border: none; border-radius: 999px; background: #FFF4F3; color: #3B2A25; font-size: 22px; cursor: pointer">+</button>
+          </div>
+          <span style="font-size: 14px; color: #5A4842">Subtotal {{subtotalText}}</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px; padding: 14px 18px; border-radius: 16px; background: rgba(249, 182, 186, 0.45)">
+          <span style="font-size: 15px; font-weight: 500">{{giftText}}</span>
+          <span style="display: block; height: 8px; border-radius: 999px; background: #FFFFFF; overflow: hidden"><span style="display: block; height: 100%; width: {{giftPct}}%; border-radius: 999px; background: #3B2A25"></span></span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px">
+          <button type="button" style="height: 56px; border-radius: 999px; border: 2px solid #3B2A25; background: transparent; color: #3B2A25; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Tambah ke keranjang</button>
+          <button type="button" style="height: 56px; border-radius: 999px; border: none; background: #3B2A25; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Beli sekarang</button>
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; gap: 12px 24px; font-size: 14px; color: #5A4842">
+          <span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"></path><path d="m9 12 2 2 4-4"></path></svg>100% original</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3h4v3h-4z"></path><path d="M8 6h8v3l1 2v9a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-9l1-2z"></path></svg>Botol kaca disegel</span>
+          <span style="display: inline-flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>Garansi 1×24 jam</span>
+        </div>
+      </div>
+    </div>
+
+    <section style="margin-top: 80px; display: flex; flex-wrap: wrap; gap: 32px 72px">
+      <div role="tablist" aria-label="Info produk" style="flex: 1 1 200px; max-width: 240px; display: flex; flex-direction: column; gap: 4px">
+        <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="3">
+          <button type="button" role="tab" aria-selected="{{tb.selected}}" onClick="{{tb.pick}}" style="text-align: left; height: 52px; padding: 0 4px; border: none; border-bottom: 2px solid {{tb.border}}; background: transparent; color: #3B2A25; font-family: inherit; font-size: 18px; font-weight: {{tb.weight}}; cursor: pointer">{{tb.label}}</button>
+        </sc-for>
+      </div>
+      <div role="tabpanel" style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+        <h2 style="margin: 0; font-family: 'Shrikhand', serif; font-weight: 400; font-size: 32px; line-height: 1.15">{{tabTitle}}</h2>
+        <sc-for list="{{tabBody}}" as="line" hint-placeholder-count="3">
+          <p style="margin: 0; font-size: 17px; line-height: 1.65; color: #3B2A25">{{line}}</p>
+        </sc-for>
+      </div>
+    </section>
+
+    <section style="margin-top: 88px; display: flex; flex-direction: column; gap: 24px">
+      <h2 style="margin: 0; font-family: 'Shrikhand', serif; font-weight: 400; font-size: 32px">Kamu mungkin suka</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr)); gap: 32px 20px">
+        <sc-for list="{{related}}" as="r" hint-placeholder-count="4">
+          <a href="#" style="display: flex; flex-direction: column; gap: 10px">
+            <img src="{{r.img}}" alt="{{r.name}}" style="width: 100%; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 18px; background: #FFFFFF; border: 1px solid rgba(222, 157, 169, 0.45)">
+            <span style="font-family: 'Shrikhand', serif; font-size: 19px; line-height: 1.2">{{r.name}}</span>
+            <span style="font-size: 14px; color: #5A4842">{{r.meta}}</span>
+            <span style="font-size: 20px; font-weight: 700">{{r.price}}</span>
+          </a>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+
+  <footer style="background: #F9B6BA; color: #3B2A25">
+    <div style="max-width: 1280px; margin: 0 auto; padding: 32px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px">
+      <span style="font-family: 'Pacifico', cursive; font-size: 22px; color: #3B2A25">Angelia Perfume</span>
+      <span>© 2026 Angelia Perfume · Decant dan full size original</span>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { aroma: 0, size: 2, qty: 1, img: 0, tab: 0 };
+  }
+  renderVals() {
+    var self = this;
+    var st = this.state;
+    var rp = function (n) { return 'Rp' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };
+    var AROMAS = [
+      { name: 'Black Onyx', crop: '/_blob/ec85b87391e6dc98fba38c29eb901cf4', notesImg: '/_blob/caed2e825dc3f80da3c05f1c7cee58fc', top: 'Green Apple, Bergamot, Grapefruit', mid: 'Thuya Wood, Elemi, Galbanum', base: 'Patchouly, Benzoin, Dry Amber', stock: [30, 30, 29, 29, 30] },
+      { name: 'Amethyst', crop: '/_blob/bc8cbb190349192061663ddc2681ffc3', notesImg: '/_blob/cc94bcdc2c86bc8347aac5232c23cc17', top: 'Rose', mid: 'Coffee', base: 'Amber, Vanilla, Musk', stock: [30, 30, 30, 30, 30] },
+      { name: 'Topaz', crop: '/_blob/2fbb969b412a58ec4206c479e9da7726', notesImg: '/_blob/e75cfef24b3a86dbe523344239e9b0c2', top: 'Bergamot, Mandarin, Lavender, Pear', mid: 'Orange Flower, Muguet, Ylang, Gourmand', base: 'Amber Dry, Sandalwood, Oak Moss, Vanilla', stock: [30, 30, 30, 29, 30] },
+      { name: 'Aquamarine', crop: '/_blob/a644a022442aa260613369851c9c6b24', notesImg: '/_blob/51594e8b669ec5d62294325ebfdafadb', top: 'Bergamot, Mandarin, Lemon', mid: 'Lily of the Valley, Peony, Cotton', base: 'Sandalwood, Ambroxan, Musk', stock: [27, 29, 30, 29, 30] }
+    ];
+    var SIZES = [
+      { label: '0,5 ml', kind: 'Vial oles', price: 9000 },
+      { label: '1 ml', kind: 'Vial oles', price: 12000 },
+      { label: '2 ml', kind: 'Spray', price: 20000 },
+      { label: '3 ml', kind: 'Spray', price: 26000 },
+      { label: '5 ml', kind: 'Spray', price: 35000 }
+    ];
+    var TABS = [
+      { label: 'Deskripsi', title: 'Tentang decant ini', body: [
+        'Zataru Signature dalam botol decant Angelia Perfume: cairan asli dipindahkan dari botol original dengan suntikan berbeda untuk setiap parfum, tanpa tambahan alkohol.',
+        'Ukuran 0,5 ml dan 1 ml memakai vial oles kaca; 2 ml sampai 5 ml memakai botol kaca spray. Semua botol disegel sebelum dikirim.'
+      ] },
+      { label: 'Pengiriman', title: 'Pengiriman', body: [
+        'Berat paket 60 g per botol. Ongkir dihitung otomatis di checkout sesuai alamat dan kurir yang dipilih.',
+        'Decant dikirim dengan kurir reguler atau hemat. Jam kirim: [ATURAN JAM KIRIM, menunggu konfirmasi toko].'
+      ] },
+      { label: 'Garansi & retur', title: 'Garansi & retur', body: [
+        'Komplain diterima maksimal 1×24 jam sejak barang diterima, dengan video unboxing dari awal sampai akhir.',
+        'Berlaku bila produk tidak sesuai, pecah atau bocor, atau tidak original.'
+      ] }
+    ];
+    var a = AROMAS[st.aroma];
+    var s = SIZES[st.size];
+    var stock = a.stock[st.size];
+    var subtotal = s.price * st.qty;
+    var gift = 100000;
+    var gallery = [
+      { img: a.crop, label: 'Foto ' + a.name },
+      { img: a.notesImg, label: 'Notes ' + a.name },
+      { img: '/_blob/f0357d45f986905e64bb8456f735bd30', label: 'Semua aroma Zataru Signature' }
+    ];
+    return {
+      aromaName: a.name,
+      sizeLabel: s.label,
+      priceText: rp(s.price),
+      stockText: stock > 0 ? 'Tersedia · ' + stock + ' botol' : 'Stok habis',
+      stockDot: stock > 5 ? '#3B2A25' : '#DE9DA9',
+      notesTop: a.top, notesMid: a.mid, notesBase: a.base,
+      mainImg: gallery[st.img].img,
+      mainAlt: gallery[st.img].label,
+      thumbs: gallery.map(function (g, i) {
+        return { img: g.img, label: g.label, border: i === st.img ? '#3B2A25' : 'rgba(222, 157, 169, 0.45)', opacity: i === st.img ? '1' : '0.75', pick: function () { self.setState({ img: i }); } };
+      }),
+      aromas: AROMAS.map(function (x, i) {
+        var on = i === st.aroma;
+        return { name: x.name, crop: x.crop, pressed: on ? 'true' : 'false', border: on ? '#3B2A25' : 'rgba(222, 157, 169, 0.6)', bg: on ? '#F9B6BA' : '#FFFFFF', pick: function () { self.setState({ aroma: i, img: 0, qty: 1 }); } };
+      }),
+      sizes: SIZES.map(function (x, i) {
+        var on = i === st.size;
+        return { label: x.label, kind: x.kind + ' · ' + rp(x.price), pressed: on ? 'true' : 'false', border: on ? '#3B2A25' : 'rgba(222, 157, 169, 0.6)', bg: on ? '#F9B6BA' : '#FFFFFF', fg: '#3B2A25', pick: function () { self.setState({ size: i, qty: 1 }); } };
+      }),
+      qty: st.qty,
+      minus: function () { self.setState({ qty: Math.max(1, st.qty - 1) }); },
+      plus: function () { self.setState({ qty: Math.min(stock, st.qty + 1) }); },
+      subtotalText: rp(subtotal),
+      giftText: subtotal >= gift ? 'Pesanan ini dapat free decant otomatis.' : 'Tambah ' + rp(gift - subtotal) + ' lagi untuk dapat free decant.',
+      giftPct: Math.min(100, Math.round(subtotal / gift * 100)),
+      tabs: TABS.map(function (t, i) {
+        var on = i === st.tab;
+        return { label: t.label, selected: on ? 'true' : 'false', border: on ? '#3B2A25' : 'rgba(222, 157, 169, 0.5)', weight: on ? '600' : '400', pick: function () { self.setState({ tab: i }); } };
+      }),
+      tabTitle: TABS[st.tab].title,
+      tabBody: TABS[st.tab].body,
+      related: [
+        { name: 'Iki Arum', meta: 'Decant · 8 aroma', price: 'mulai Rp9.000', img: '/_blob/803499dd2f0a496ffb13dd0925ff2fd6' },
+        { name: 'MYKONOS Decant', meta: 'Decant · 63 aroma', price: 'mulai Rp9.000', img: '/_blob/802f0120ffa06ba0ec24352698d71c08' },
+        { name: 'CRUSITA Decant', meta: 'Decant · 34 aroma', price: 'mulai Rp9.000', img: '/_blob/8c093d92d76fd87735d3e4fad7ae9f30' },
+        { name: 'MYKONOS Travel Size 15 ml', meta: '17 aroma', price: 'mulai Rp80.000', img: '/_blob/c4d4fddc3a61b03b3ade21c2f37b39d0' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

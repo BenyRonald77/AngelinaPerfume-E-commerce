@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+        @apply bg-cream text-ink font-sans antialiased;
+    }
+
+    /* Kontrol yang bisa dipakai selalu menunjukkan kursor tangan; yang nonaktif tidak */
+    a[href],
+    button:not(:disabled),
+    summary,
+    select,
+    label[for],
+    label:has(> input[type='checkbox']),
+    label:has(> input[type='radio']),
+    input[type='checkbox'],
+    input[type='radio'] {
+        cursor: pointer;
+    }
+
+    button:disabled,
+    [aria-disabled='true'] {
+        cursor: not-allowed;
+    }
+
+    /* Satu gaya fokus untuk semua kontrol: garis ink tebal, terlihat di latar cream maupun blush */
+    :focus-visible {
+        outline: 3px solid theme('colors.ink');
+        outline-offset: 2px;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            transition-duration: 0.01ms !important;
+            animation-duration: 0.01ms !important;
+        }
+    }
+}
+
+@layer components {
+    /* Tombol utama: latar ink teks putih (PRD, Desain & palet) */
+    .btn-primary {
+        @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-ink px-7 font-semibold text-white transition-colors hover:bg-[#2A1D19] active:bg-[#1F1512] disabled:bg-ink-soft/40 disabled:text-white;
+    }
+
+    .btn-outline {
+        @apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full border-2 border-ink px-7 font-semibold text-ink transition-colors hover:bg-ink hover:text-white active:bg-[#1F1512] disabled:border-ink-soft/40 disabled:text-ink-soft disabled:hover:bg-transparent;
+    }
+
+    /* Motif toko: kartu info bergaris putus-putus pink, sama seperti foto varian di Shopee */
+    .card-dashed {
+        @apply rounded-3xl border-2 border-dashed border-dusty-pink bg-white;
+    }
+
+    /* Lapisan gelap di atas foto hero (permintaan pemilik, mengikuti contoh): cokelat ink pekat di kiri
+       untuk teks, terbuka di kanan untuk botol, dan menggelap di atas (header) dan bawah (strip Terlaris). */
+    .hero-shade {
+        background:
+            linear-gradient(to bottom, rgb(43 30 26 / 0.85) 0%, rgb(43 30 26 / 0) 22%),
+            linear-gradient(to top, rgb(43 30 26 / 0.92) 0%, rgb(43 30 26 / 0) 38%),
+            linear-gradient(to right, rgb(43 30 26 / 0.96) 0%, rgb(43 30 26 / 0.82) 38%, rgb(43 30 26 / 0.25) 70%, rgb(43 30 26 / 0.1) 100%);
+    }
+
+    /* Di desktop foto hanya menutup sisi kanan; tepi kirinya dipudarkan supaya tidak ada garis potong */
+    @media (min-width: 1024px) {
+        .hero-photo {
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+        }
+    }
+
+    /* Strip Terlaris di dasar hero: kaca gelap transparan (R-10: bersama pil header, dua elemen) */
+    .strip-dark {
+        background: rgb(43 30 26 / 0.55);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* Di atas latar gelap garis fokus ink tidak terlihat; pakai cream */
+    .on-dark :focus-visible {
+        outline-color: theme('colors.cream');
+    }
+
+    .eyebrow {
+        @apply text-xs font-semibold uppercase tracking-[0.08em] text-ink-soft;
+    }
+}
