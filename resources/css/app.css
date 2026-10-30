@@ -121,44 +121,49 @@
         }
     }
 
-    /* Teks berjalan di bar pengumuman (permintaan pemilik). Track berisi dua salinan teks yang sama;
-       satu putaran menggeser setengah lebar track, jadi sambungannya tidak terlihat.
-       Durasi diatur app dari panjang teks (kecepatan tetap sekitar 45 px/detik). */
+    /* Teks berjalan di bar pengumuman (permintaan pemilik): satu kalimat masuk dari tepi kanan,
+       berjalan sampai habis di kiri, lalu muncul lagi dari kanan. padding-left 100% (selebar bar)
+       membuat kalimat mulai tepat di luar tepi kanan; translateX(-100%) membawanya habis ke kiri.
+       translate3d + will-change memindahkan gerak ke GPU supaya halus. Durasi diatur app
+       dari lebar kalimat dan bar, jadi kecepatannya sama di HP dan desktop. */
     .marquee-track {
-        animation: marquee var(--marquee-duration, 30s) linear infinite;
+        display: inline-block;
+        vertical-align: top;
+        padding-left: 100%;
+        white-space: nowrap;
+        will-change: transform;
+        animation: marquee var(--marquee-duration, 35s) linear infinite;
     }
 
-    /* Teks memudar di kedua tepi, tidak terpotong tajam di sebelah tombol jeda */
-    .marquee-viewport {
-        -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
-        mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
-    }
-
-    .marquee:hover .marquee-track,
     .marquee.is-paused .marquee-track {
         animation-play-state: paused;
     }
 
     @keyframes marquee {
+        from {
+            transform: translate3d(0, 0, 0);
+        }
         to {
-            transform: translateX(-50%);
+            transform: translate3d(-100%, 0, 0);
         }
     }
 
-    /* Tanpa animasi: teks diam, dibungkus ke baris berikutnya bila perlu, tombol jeda disembunyikan */
+    /* Teks memudar di kedua tepi, tidak terpotong tajam di sebelah tombol jeda */
+    .marquee-viewport {
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+        mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
+    }
+
+    /* Tanpa animasi: kalimat diam di tengah, boleh dua baris, tombol jeda disembunyikan */
     @media (prefers-reduced-motion: reduce) {
         .marquee-track {
             animation: none !important;
-            width: auto;
-            justify-content: center;
+            display: block;
+            padding-left: 0;
+            white-space: normal;
+            text-align: center;
         }
 
-        .marquee-track > ul {
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .marquee-track > ul + ul,
         .marquee-toggle {
             display: none;
         }

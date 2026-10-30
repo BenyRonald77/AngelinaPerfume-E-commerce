@@ -31,19 +31,17 @@ final class Promo
     }
 
     /**
-     * Kalimat bar pengumuman: hadiah dari aturan yang aktif dulu (ditebalkan), lalu jaminan toko.
+     * Kalimat bar pengumuman: hadiah dari aturan yang aktif dulu, lalu jaminan toko.
      *
-     * @return list<array{text: string, promo: bool}>
+     * @return list<string>
      */
     public static function announcements(): array
     {
-        $promos = self::giftRules()->map(fn (GiftRule $rule) => [
-            'text' => 'Belanja min. '.Rupiah::format($rule->min_subtotal).' dapat '.self::giftLabel($rule),
-            'promo' => true,
-        ]);
-        $facts = collect(['100% original', 'Botol kaca disegel sebelum dikirim', 'Toko Shopee sejak 2023'])
-            ->map(fn (string $text) => ['text' => $text, 'promo' => false]);
-
-        return $promos->concat($facts)->values()->all();
+        return [
+            ...self::giftRules()->map(fn (GiftRule $rule) => 'Belanja min. '.Rupiah::format($rule->min_subtotal).' dapat '.self::giftLabel($rule))->all(),
+            '100% original',
+            'Botol kaca disegel sebelum dikirim',
+            'Toko Shopee sejak 2023',
+        ];
     }
 }

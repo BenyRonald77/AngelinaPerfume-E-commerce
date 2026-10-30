@@ -40,31 +40,18 @@
 
     {{-- Mode overlay (Beranda): bar pengumuman dan header menempel di atas foto hero --}}
     <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
-        {{-- Teks berjalan (permintaan pemilik): semua info toko terbaca di HP tanpa jadi dua baris.
-             Berhenti saat disorot kursor dan lewat tombol jeda (WCAG 2.2.2). Pembaca layar membaca
-             kalimatnya sekali dari teks sr-only; salinan yang bergerak disembunyikan darinya. --}}
-        <div x-data="{ jeda: false }"
-             x-init="$refs.track.style.setProperty('--marquee-duration', Math.max(20, $refs.track.scrollWidth / 2 / 45) + 's')"
+        {{-- Teks berjalan (permintaan pemilik): satu kalimat seperti bar lama, berjalan ke kiri sampai habis
+             lalu muncul lagi dari kanan. Bisa dihentikan lewat tombol jeda (WCAG 2.2.2). --}}
+        <div x-data="{ jeda: false, ukur() { const t = this.$refs.track; t.style.setProperty('--marquee-duration', (t.offsetWidth / 55).toFixed(2) + 's'); } }"
+             x-init="ukur()" @resize.window.debounce.300ms="ukur()"
              :class="jeda ? 'is-paused' : ''"
              @class([
                  'marquee flex items-stretch text-sm',
                  'bar-glass text-cream' => $overlayHeader,
                  'bg-dusty-pink text-ink' => ! $overlayHeader,
              ])>
-            <p class="sr-only">{{ collect($announcements)->pluck('text')->implode('. ') }}.</p>
-            <div class="marquee-viewport min-w-0 flex-1 overflow-hidden" aria-hidden="true">
-                <div x-ref="track" class="marquee-track flex w-max">
-                    @foreach ([0, 1] as $copy)
-                        <ul class="flex shrink-0 items-center">
-                            @foreach ($announcements as $item)
-                                <li class="flex items-center whitespace-nowrap py-3 leading-5">
-                                    <span @class(['font-semibold' => $item['promo']])>{{ $item['text'] }}</span>
-                                    <span class="px-5 opacity-60">·</span>
-                                </li>
-                            @endforeach
-                        </ul>
-                    @endforeach
-                </div>
+            <div class="marquee-viewport min-w-0 flex-1 overflow-hidden">
+                <p x-ref="track" class="marquee-track py-3 leading-5">{{ implode(' · ', $announcements) }}</p>
             </div>
             <button type="button" @click="jeda = ! jeda" :aria-pressed="jeda.toString()" aria-pressed="false"
                     :aria-label="jeda ? 'Jalankan teks berjalan' : 'Jeda teks berjalan'" aria-label="Jeda teks berjalan"
