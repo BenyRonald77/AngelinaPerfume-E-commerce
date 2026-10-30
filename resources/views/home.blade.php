@@ -14,22 +14,24 @@
     {{-- Hero pink bermawar di keempat sudut (permintaan pemilik). Sorotan krem di tengah (hero-pink)
          membuat judul paling terang di halaman, mawar di tepi tidak bersaing dengannya. --}}
     <section class="hero-pink relative isolate flex min-h-[720px] flex-col overflow-hidden text-ink lg:min-h-[780px]">
-        <div class="relative isolate flex w-full flex-1 items-center justify-center px-6 pb-24 pt-44 sm:px-10 sm:pb-28 lg:pt-48">
+        <div class="relative isolate flex w-full flex-1 items-center justify-center px-6 pb-24 pt-32 sm:px-10 sm:pb-28 lg:pt-36">
             <x-hero-mawar />
 
-            <div class="flex max-w-3xl flex-col items-center gap-6 text-center">
-                <h1 class="hero-enter font-display text-[38px] leading-[1.08] sm:text-[54px] lg:text-[64px]">Pilih wangi favoritmu sesuai ciri <span class="whitespace-nowrap">khas mu.</span></h1>
-                <p class="hero-enter max-w-2xl text-lg leading-relaxed text-ink-soft sm:text-[19px]" style="--reveal-delay: 120ms">
+            <div class="flex flex-col items-center gap-6 text-center lg:gap-8">
+                {{-- Judul membesar mengikuti lebar layar supaya kiri-kanan tidak kosong (permintaan pemilik);
+                     dari tablet ke atas selalu dua baris, ukuran tiap tahap dijaga agar baris pertama muat. --}}
+                <h1 class="hero-enter font-display text-[40px] leading-[1.06] md:text-[46px] lg:text-[62px] xl:text-[76px] 2xl:text-[90px] min-[1800px]:text-[100px]">Pilih wangi favoritmu<br class="hidden md:block"> sesuai ciri <span class="whitespace-nowrap">khas mu.</span></h1>
+                <p class="hero-enter max-w-2xl text-lg leading-relaxed text-ink-soft sm:text-[19px] lg:max-w-3xl lg:text-[21px] 2xl:text-[23px]" style="--reveal-delay: 120ms">
                     Decant dan full size original dari {{ $brandCount }} merek. Coba aromanya dulu dalam botol kecil, lalu pilih botol besar yang paling kamu suka. Reseller resmi MYKONOS, di Shopee sejak 2023.
                 </p>
                 <div class="hero-enter flex flex-wrap justify-center gap-3 pt-2" style="--reveal-delay: 240ms">
                     {{-- Satu-satunya tombol dengan panah: jalur utama ke katalog decant --}}
-                    <a href="{{ route('produk.index', ['jenis' => 'decant']) }}" class="btn-primary h-[52px]">
+                    <a href="{{ route('produk.index', ['jenis' => 'decant']) }}" class="btn-primary h-[52px] lg:h-14 lg:px-9 lg:text-[17px]">
                         Belanja decant
                         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
                     </a>
                     @if ($travel)
-                        <a href="{{ route('produk.show', $travel) }}" class="btn-outline h-[52px] bg-white/40">Travel size MYKONOS</a>
+                        <a href="{{ route('produk.show', $travel) }}" class="btn-outline h-[52px] bg-white/40 lg:h-14 lg:px-9 lg:text-[17px]">Travel size MYKONOS</a>
                     @endif
                 </div>
             </div>

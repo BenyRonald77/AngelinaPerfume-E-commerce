@@ -4,13 +4,11 @@ namespace Tests\Feature;
 
 use App\Livewire\Catalog;
 use App\Models\Category;
-use App\Models\GiftRule;
 use App\Models\Product;
 use App\Models\ProductAroma;
 use App\Models\ProductVariant;
 use App\Models\Size;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Once;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -30,25 +28,6 @@ class StorefrontTest extends TestCase
     {
         $this->get('/')->assertOk()->assertSeeText('Pilih wangi favoritmu sesuai ciri khas mu.');
         $this->get('/produk')->assertOk()->assertSee('Belum ada produk yang cocok');
-    }
-
-    public function test_announcement_bar_shows_only_deliverable_gifts(): void
-    {
-        $gift = $this->product('Mystery Gift', Category::HADIAH, [['Acak', 2, 0, 5]])->variants()->first();
-        $rule = GiftRule::create(['name' => 'Free decant (min. belanja Rp100.000)', 'gift_variant_id' => $gift->id, 'min_subtotal' => 100000]);
-
-        // Belum diaktifkan admin: tidak dijanjikan
-        $this->get('/')->assertOk()->assertDontSee('dapat free decant')->assertSee('Toko Shopee sejak 2023');
-
-        // Promo::giftRules() memakai once() per proses; di tes beberapa permintaan berbagi satu proses
-        $rule->update(['is_active' => true]);
-        Once::flush();
-        $this->get('/')->assertSee('Belanja min. Rp100.000 dapat free decant');
-
-        // Stok hadiah habis: checkout tidak menambahkannya, bar juga berhenti menjanjikan
-        $gift->update(['stock' => 0]);
-        Once::flush();
-        $this->get('/produk')->assertDontSee('dapat free decant');
     }
 
     public function test_home_and_catalog_show_real_products(): void

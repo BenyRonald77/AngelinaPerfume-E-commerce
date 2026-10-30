@@ -4,7 +4,6 @@
     use App\Support\Promo;
     use App\Support\WhatsApp;
 
-    $announcements = Promo::announcements();
     $jenis = request()->routeIs('produk.index') ? request('jenis') : null;
     $nav = [
         ['label' => 'Beranda', 'href' => route('home'), 'active' => request()->routeIs('home')],
@@ -38,23 +37,8 @@
 <body class="flex min-h-screen flex-col">
     <a href="#isi" class="sr-only z-50 rounded-full bg-ink px-5 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Langsung ke isi</a>
 
-    {{-- Mode overlay (Beranda): bar pengumuman dan header transparan menempel di atas hero pink --}}
+    {{-- Mode overlay (Beranda): header transparan menempel di atas hero pink --}}
     <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
-        {{-- Teks berjalan (permintaan pemilik): satu kalimat seperti bar lama, berjalan ke kiri sampai habis
-             lalu muncul lagi dari kanan. Tanpa tombol jeda atas permintaan pemilik; pengguna "reduced motion"
-             melihat kalimatnya diam. --}}
-        <div x-data="{ ukur() { const t = this.$refs.track; t.style.setProperty('--marquee-duration', (t.offsetWidth / 55).toFixed(2) + 's'); } }"
-             x-init="ukur()" @resize.window.debounce.300ms="ukur()"
-             @class([
-                 'marquee text-sm',
-                 'bg-dusty-pink/85 text-ink' => $overlayHeader,
-                 'bg-dusty-pink text-ink' => ! $overlayHeader,
-             ])>
-            <div class="marquee-viewport overflow-hidden">
-                <p x-ref="track" class="marquee-track py-3 leading-5">{{ implode(' · ', $announcements) }}</p>
-            </div>
-        </div>
-
         <header @class(['relative text-ink' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
             {{-- Header selebar layar: logo di tepi kiri, cari dan akun di tepi kanan --}}

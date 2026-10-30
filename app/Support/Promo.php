@@ -23,25 +23,4 @@ final class Promo
     {
         return self::giftRules()->first()?->min_subtotal;
     }
-
-    /** "Free decant (min. belanja Rp100.000)" menjadi "free decant" */
-    public static function giftLabel(GiftRule $rule): string
-    {
-        return lcfirst(trim(preg_replace('/\s*\(.*\)\s*$/', '', $rule->name)));
-    }
-
-    /**
-     * Kalimat bar pengumuman: hadiah dari aturan yang aktif dulu, lalu jaminan toko.
-     *
-     * @return list<string>
-     */
-    public static function announcements(): array
-    {
-        return [
-            ...self::giftRules()->map(fn (GiftRule $rule) => 'Belanja min. '.Rupiah::format($rule->min_subtotal).' dapat '.self::giftLabel($rule))->all(),
-            '100% original',
-            'Botol kaca disegel sebelum dikirim',
-            'Toko Shopee sejak 2023',
-        ];
-    }
 }

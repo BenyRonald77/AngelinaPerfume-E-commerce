@@ -79,48 +79,24 @@
         -webkit-backdrop-filter: blur(12px);
     }
 
-    /* Teks berjalan di bar pengumuman (permintaan pemilik): satu kalimat masuk dari tepi kanan,
-       berjalan sampai habis di kiri, lalu muncul lagi dari kanan. padding-left 100% (selebar bar)
-       membuat kalimat mulai tepat di luar tepi kanan; translateX(-100%) membawanya habis ke kiri.
-       translate3d + will-change memindahkan gerak ke GPU supaya halus. Durasi diatur app
-       dari lebar kalimat dan bar, jadi kecepatannya sama di HP dan desktop. */
-    .marquee-track {
-        display: inline-block;
-        vertical-align: top;
-        padding-left: 100%;
-        white-space: nowrap;
-        will-change: transform;
-        animation: marquee var(--marquee-duration, 35s) linear infinite;
-    }
-
-    @keyframes marquee {
-        from {
-            transform: translate3d(0, 0, 0);
-        }
-        to {
-            transform: translate3d(-100%, 0, 0);
-        }
-    }
-
-    /* Teks memudar di kedua tepi, tidak terpotong tajam */
-    .marquee-viewport {
-        -webkit-mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
-        mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
-    }
-
-    /* Tanpa animasi: kalimat diam di tengah, boleh dua baris */
-    @media (prefers-reduced-motion: reduce) {
-        .marquee-track {
-            animation: none !important;
-            display: block;
-            padding-left: 0;
-            white-space: normal;
-            text-align: center;
+    /* Animasi (MOTION 2, permintaan pemilik). Tujuan: hero dibaca berurutan (judul, ajakan, terlaris),
+       dan bagian bawah halaman muncul satu kali saat masuk layar. Tanpa animasi berulang.
+       Pengguna dengan "reduced motion" langsung melihat semuanya tanpa gerak. */
+    @media (prefers-reduced-motion: no-preference) {
+        .hero-enter {
+            animation: hero-enter 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+            animation-delay: var(--reveal-delay, 0ms);
         }
 
-        .marquee-viewport {
-            -webkit-mask-image: none;
-            mask-image: none;
+        /* Kelas .js-reveal dipasang oleh app.js; tanpa JavaScript konten tetap tampil */
+        .js-reveal [data-reveal]:not(.is-revealed) {
+            opacity: 0;
+            transform: translateY(28px);
+        }
+
+        .js-reveal [data-reveal] {
+            transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+            transition-delay: var(--reveal-delay, 0ms);
         }
     }
 
