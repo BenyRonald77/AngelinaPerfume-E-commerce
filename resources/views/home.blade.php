@@ -18,7 +18,7 @@
             <x-hero-mawar />
 
             <div class="flex max-w-3xl flex-col items-center gap-6 text-center">
-                <h1 class="hero-enter font-display text-[38px] leading-[1.08] sm:text-[54px] lg:text-[64px]">Pilih wangi favoritmu sesuai ciri khasmu.</h1>
+                <h1 class="hero-enter font-display text-[38px] leading-[1.08] sm:text-[54px] lg:text-[64px]">Pilih wangi favoritmu sesuai ciri <span class="whitespace-nowrap">khas mu.</span></h1>
                 <p class="hero-enter max-w-2xl text-lg leading-relaxed text-ink-soft sm:text-[19px]" style="--reveal-delay: 120ms">
                     Decant dan full size original dari {{ $brandCount }} merek. Coba aromanya dulu dalam botol kecil, lalu pilih botol besar yang paling kamu suka. Reseller resmi MYKONOS, di Shopee sejak 2023.
                 </p>
