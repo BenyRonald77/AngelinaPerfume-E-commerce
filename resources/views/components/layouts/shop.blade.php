@@ -41,26 +41,18 @@
     {{-- Mode overlay (Beranda): bar pengumuman dan header menempel di atas foto hero --}}
     <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
         {{-- Teks berjalan (permintaan pemilik): satu kalimat seperti bar lama, berjalan ke kiri sampai habis
-             lalu muncul lagi dari kanan. Bisa dihentikan lewat tombol jeda (WCAG 2.2.2). --}}
-        <div x-data="{ jeda: false, ukur() { const t = this.$refs.track; t.style.setProperty('--marquee-duration', (t.offsetWidth / 55).toFixed(2) + 's'); } }"
+             lalu muncul lagi dari kanan. Tanpa tombol jeda atas permintaan pemilik; pengguna "reduced motion"
+             melihat kalimatnya diam. --}}
+        <div x-data="{ ukur() { const t = this.$refs.track; t.style.setProperty('--marquee-duration', (t.offsetWidth / 55).toFixed(2) + 's'); } }"
              x-init="ukur()" @resize.window.debounce.300ms="ukur()"
-             :class="jeda ? 'is-paused' : ''"
              @class([
-                 'marquee flex items-stretch text-sm',
+                 'marquee text-sm',
                  'bar-glass text-cream' => $overlayHeader,
                  'bg-dusty-pink text-ink' => ! $overlayHeader,
              ])>
-            <div class="marquee-viewport min-w-0 flex-1 overflow-hidden">
+            <div class="marquee-viewport overflow-hidden">
                 <p x-ref="track" class="marquee-track py-3 leading-5">{{ implode(' · ', $announcements) }}</p>
             </div>
-            <button type="button" @click="jeda = ! jeda" :aria-pressed="jeda.toString()" aria-pressed="false"
-                    :aria-label="jeda ? 'Jalankan teks berjalan' : 'Jeda teks berjalan'" aria-label="Jeda teks berjalan"
-                    @class(['marquee-toggle flex w-11 shrink-0 items-center justify-center border-l transition-colors',
-                            'border-white/15 hover:bg-white/10' => $overlayHeader,
-                            'border-ink/15 hover:bg-white/30' => ! $overlayHeader])>
-                <svg x-show="! jeda" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
-                <svg x-show="jeda" x-cloak aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>
-            </button>
         </div>
 
         <header @class(['relative text-cream on-dark' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])

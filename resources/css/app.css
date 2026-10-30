@@ -135,10 +135,6 @@
         animation: marquee var(--marquee-duration, 35s) linear infinite;
     }
 
-    .marquee.is-paused .marquee-track {
-        animation-play-state: paused;
-    }
-
     @keyframes marquee {
         from {
             transform: translate3d(0, 0, 0);
@@ -148,13 +144,13 @@
         }
     }
 
-    /* Teks memudar di kedua tepi, tidak terpotong tajam di sebelah tombol jeda */
+    /* Teks memudar di kedua tepi, tidak terpotong tajam */
     .marquee-viewport {
         -webkit-mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
         mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 20px), transparent);
     }
 
-    /* Tanpa animasi: kalimat diam di tengah, boleh dua baris, tombol jeda disembunyikan */
+    /* Tanpa animasi: kalimat diam di tengah, boleh dua baris */
     @media (prefers-reduced-motion: reduce) {
         .marquee-track {
             animation: none !important;
@@ -162,10 +158,6 @@
             padding-left: 0;
             white-space: normal;
             text-align: center;
-        }
-
-        .marquee-toggle {
-            display: none;
         }
 
         .marquee-viewport {
