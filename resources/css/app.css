@@ -121,6 +121,54 @@
         }
     }
 
+    /* Teks berjalan di bar pengumuman (permintaan pemilik). Track berisi dua salinan teks yang sama;
+       satu putaran menggeser setengah lebar track, jadi sambungannya tidak terlihat.
+       Durasi diatur app dari panjang teks (kecepatan tetap sekitar 45 px/detik). */
+    .marquee-track {
+        animation: marquee var(--marquee-duration, 30s) linear infinite;
+    }
+
+    /* Teks memudar di kedua tepi, tidak terpotong tajam di sebelah tombol jeda */
+    .marquee-viewport {
+        -webkit-mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+        mask-image: linear-gradient(to right, transparent, #000 24px, #000 calc(100% - 24px), transparent);
+    }
+
+    .marquee:hover .marquee-track,
+    .marquee.is-paused .marquee-track {
+        animation-play-state: paused;
+    }
+
+    @keyframes marquee {
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* Tanpa animasi: teks diam, dibungkus ke baris berikutnya bila perlu, tombol jeda disembunyikan */
+    @media (prefers-reduced-motion: reduce) {
+        .marquee-track {
+            animation: none !important;
+            width: auto;
+            justify-content: center;
+        }
+
+        .marquee-track > ul {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .marquee-track > ul + ul,
+        .marquee-toggle {
+            display: none;
+        }
+
+        .marquee-viewport {
+            -webkit-mask-image: none;
+            mask-image: none;
+        }
+    }
+
     @keyframes hero-enter {
         from {
             opacity: 0;

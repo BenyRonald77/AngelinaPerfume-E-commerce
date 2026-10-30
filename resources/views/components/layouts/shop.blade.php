@@ -2,10 +2,9 @@
 
 @php
     use App\Support\Promo;
-    use App\Support\Rupiah;
     use App\Support\WhatsApp;
 
-    $gift = Promo::firstGiftThreshold();
+    $announcements = Promo::announcements();
     $jenis = request()->routeIs('produk.index') ? request('jenis') : null;
     $nav = [
         ['label' => 'Beranda', 'href' => route('home'), 'active' => request()->routeIs('home')],
@@ -41,17 +40,41 @@
 
     {{-- Mode overlay (Beranda): bar pengumuman dan header menempel di atas foto hero --}}
     <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
-        <p @class([
-            'px-4 py-2.5 text-center text-sm',
-            'bar-glass text-cream' => $overlayHeader,
-            'bg-dusty-pink text-ink' => ! $overlayHeader,
-        ])>
-            @if ($gift)
-                Free decant otomatis untuk belanja min. {{ Rupiah::format($gift) }} · 100% original · Botol disegel sebelum dikirim
-            @else
-                100% original · Botol kaca disegel sebelum dikirim · Toko Shopee sejak 2023
-            @endif
-        </p>
+        {{-- Teks berjalan (permintaan pemilik): semua info toko terbaca di HP tanpa jadi dua baris.
+             Berhenti saat disorot kursor dan lewat tombol jeda (WCAG 2.2.2). Pembaca layar membaca
+             kalimatnya sekali dari teks sr-only; salinan yang bergerak disembunyikan darinya. --}}
+        <div x-data="{ jeda: false }"
+             x-init="$refs.track.style.setProperty('--marquee-duration', Math.max(20, $refs.track.scrollWidth / 2 / 45) + 's')"
+             :class="jeda ? 'is-paused' : ''"
+             @class([
+                 'marquee flex items-stretch text-sm',
+                 'bar-glass text-cream' => $overlayHeader,
+                 'bg-dusty-pink text-ink' => ! $overlayHeader,
+             ])>
+            <p class="sr-only">{{ collect($announcements)->pluck('text')->implode('. ') }}.</p>
+            <div class="marquee-viewport min-w-0 flex-1 overflow-hidden" aria-hidden="true">
+                <div x-ref="track" class="marquee-track flex w-max">
+                    @foreach ([0, 1] as $copy)
+                        <ul class="flex shrink-0 items-center">
+                            @foreach ($announcements as $item)
+                                <li class="flex items-center whitespace-nowrap py-3 leading-5">
+                                    <span @class(['font-semibold' => $item['promo']])>{{ $item['text'] }}</span>
+                                    <span class="px-5 opacity-60">·</span>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endforeach
+                </div>
+            </div>
+            <button type="button" @click="jeda = ! jeda" :aria-pressed="jeda.toString()" aria-pressed="false"
+                    :aria-label="jeda ? 'Jalankan teks berjalan' : 'Jeda teks berjalan'" aria-label="Jeda teks berjalan"
+                    @class(['marquee-toggle flex w-11 shrink-0 items-center justify-center border-l transition-colors',
+                            'border-white/15 hover:bg-white/10' => $overlayHeader,
+                            'border-ink/15 hover:bg-white/30' => ! $overlayHeader])>
+                <svg x-show="! jeda" aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>
+                <svg x-show="jeda" x-cloak aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13a1 1 0 0 0 1.5.9l10-6.5a1 1 0 0 0 0-1.7l-10-6.5A1 1 0 0 0 8 5.5z"/></svg>
+            </button>
+        </div>
 
         <header @class(['relative text-cream on-dark' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
