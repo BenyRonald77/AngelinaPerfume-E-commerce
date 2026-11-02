@@ -40,9 +40,9 @@ Laravel 12 (PHP 8.2+), MySQL/MariaDB, Filament (panel admin di `/admin`), Blade 
 - **Shopee Open Platform**: akun developer atas nama perusahaan developer (PT) dengan Gmail perusahaan, jenis akun Third-party Partner Platform; toko klien terhubung lewat otorisasi pemilik toko. Kunci hanya di `.env`.
 
 ## Desain
-- Palet (token Tailwind): `cream` #FFF4F3 (latar), `blush` #F9B6BA (hero, header, footer, chip terpilih), `dusty-pink` #DE9DA9 (bar pengumuman, garis kartu/filter), `ink` #3B2A25 (teks, judul, harga, tombol utama), `ink-soft` #5A4842 (teks sekunder), `white` (kartu, panel). **Jangan pakai** cocoa #551902 atau rose #DF7783 (pemilik menilai terlalu merah).
-- Font Google: Pacifico (logo), Shrikhand (judul & nama produk), League Spartan (teks, harga, tombol).
-- Mobile-first, target sentuh minimal 44 px, kontras teks minimal 4.5:1. Ikuti tata letak kanvas: hero blush + strip Terlaris, lingkaran Koleksi, grid produk dengan filter, halaman produk dengan chip aroma (foto kecil), pilihan ukuran, notes, bar progres hadiah, tab Deskripsi/Pengiriman/Garansi.
+- Palet (token Tailwind): `cream` #FFF4F3 (latar), `blush` #F9B6BA (header, footer, chip terpilih), `dusty-pink` #DE9DA9 (garis kartu/filter), `ink` #3B2A25 (teks, judul, harga, tombol utama), `ink-soft` #5A4842 (teks sekunder), `white` (kartu, panel). **Jangan pakai** cocoa #551902 atau rose #DF7783 (pemilik menilai terlalu merah).
+- Logo header dan ikon tab dari gambar logo toko (`public/images/logo/`, `public/favicon.ico`). Font Google: Pacifico (logo teks di footer), Shrikhand (judul & nama produk), League Spartan (teks, harga, tombol).
+- Mobile-first, target sentuh minimal 44 px, kontras teks minimal 4.5:1. Ikuti tata letak kanvas, kecuali hero Beranda (keputusan klien): foto gelap dengan teks di kiri + strip Terlaris, lingkaran Koleksi, grid produk dengan filter, halaman produk dengan chip aroma (foto kecil), pilihan ukuran, notes, bar progres hadiah, tab Deskripsi/Pengiriman/Garansi.
 - Rating bintang tidak ditampilkan sampai ada ulasan nyata.
 
 ## Konvensi & batasan

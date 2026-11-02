@@ -28,6 +28,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->brandName('Angelia Perfume')
+            ->favicon(asset('favicon.ico'))
             ->colors([
                 'primary' => Color::hex('#3B2A25'),
                 'gray' => Color::Stone,
