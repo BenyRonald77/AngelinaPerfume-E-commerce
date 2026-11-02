@@ -30,9 +30,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&family=Pacifico&family=Shrikhand&display=swap">
-    {{-- ?v=2 memaksa browser mengambil ulang; sebelumnya favicon.ico kosong dan tersimpan di cache browser --}}
-    <link rel="icon" href="{{ asset('favicon.ico') }}?v=2" sizes="any">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}?v=2">
+    {{-- Nomor versi memaksa browser mengambil ulang; sebelumnya favicon.ico kosong dan tersimpan di cache browser --}}
+    <link rel="icon" href="{{ asset('favicon.ico') }}?v=3" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}?v=3">
     <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     {{ $head ?? '' }}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
