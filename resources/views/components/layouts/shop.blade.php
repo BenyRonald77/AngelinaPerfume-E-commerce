@@ -49,10 +49,7 @@
             <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
                 {{-- Tiga kolom di layar lebar: menu tepat di tengah layar, tidak terdorong oleh lebar kotak cari --}}
                 <div class="flex items-center justify-between gap-3 py-4 xl:grid xl:grid-cols-[1fr_auto_1fr]">
-                    {{-- Logo toko dengan latar terang aslinya, supaya kontrasnya terjaga di header pink maupun foto gelap --}}
-                    <a href="{{ route('home') }}" class="shrink-0 rounded-xl xl:justify-self-start">
-                        <img src="{{ asset('images/logo/angelia-perfume.webp') }}" alt="Angelia Perfume" width="231" height="120" class="h-12 w-auto rounded-xl">
-                    </a>
+                    <a href="{{ route('home') }}" class="font-logo text-[26px] leading-tight sm:text-[30px] xl:justify-self-start">Angelia Perfume</a>
 
                     <nav aria-label="Menu utama" class="hidden flex-wrap gap-2 md:flex">
                         @foreach ($nav as $item)
