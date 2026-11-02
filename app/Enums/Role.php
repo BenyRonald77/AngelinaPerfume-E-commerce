@@ -10,6 +10,8 @@ enum Role: string implements HasLabel
     case Admin = 'admin';
     // Disiapkan untuk karyawan pengemas; belum dipakai di MVP
     case Staf = 'staf';
+    // Akun uji untuk peninjau Shopee Open Platform: hanya bisa membuka panel /tinjau
+    case Peninjau = 'peninjau';
 
     public function getLabel(): string
     {
@@ -22,6 +24,7 @@ enum Role: string implements HasLabel
             self::Pembeli => 'Pembeli',
             self::Admin => 'Admin',
             self::Staf => 'Staf gudang',
+            self::Peninjau => 'Peninjau',
         };
     }
 }

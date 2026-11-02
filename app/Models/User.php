@@ -86,7 +86,10 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
 
     public function canAccessPanel(Panel $panel): bool
     {
-        // Staf gudang nanti mendapat akses terbatas; untuk sekarang hanya admin
-        return $this->isAdmin();
+        // Staf gudang nanti mendapat akses terbatas; panel /admin untuk sekarang hanya admin.
+        // Panel /tinjau hanya-baca, untuk peninjau Shopee Open Platform.
+        return $panel->getId() === 'tinjau'
+            ? $this->isAdmin() || $this->role === Role::Peninjau
+            : $this->isAdmin();
     }
 }

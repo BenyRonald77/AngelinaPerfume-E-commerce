@@ -36,7 +36,8 @@ Laravel 12 (PHP 8.2+), MySQL/MariaDB, Filament (panel admin di `/admin`), Blade 
 ## Keputusan yang masih terbuka (jangan diasumsikan)
 - **Ongkir/kurir**: perusahaan menolak Biteship berbayar. Pilihan: Biteship Starter (Rp0 sampai 100 kiriman/bulan), tabel ongkir manual per provinsi + admin mengetik resi, atau API langsung J&T/JNE. Buat modul ongkir sebagai interface/driver yang bisa diganti; mulai dengan **tabel ongkir manual**.
 - **Xendit**: selama pengembangan memakai akun perusahaan developer dalam mode test; saat rilis akun atas nama toko. Kunci hanya di `.env`.
-- COD, gratis ongkir, jam kirim/operasional, kurir pengganti SPX Hemat, sinkron stok dengan Shopee (Shopee Open Platform, akun developer atas nama toko). Lihat "Pertanyaan terbuka" di PRD.
+- COD, gratis ongkir, jam kirim/operasional, kurir pengganti SPX Hemat, sinkron stok dengan Shopee (arah sinkron belum diputuskan). Lihat "Pertanyaan terbuka" di PRD.
+- **Shopee Open Platform**: akun developer atas nama perusahaan developer (PT) dengan Gmail perusahaan, jenis akun Third-party Partner Platform; toko klien terhubung lewat otorisasi pemilik toko. Kunci hanya di `.env`.
 
 ## Desain
 - Palet (token Tailwind): `cream` #FFF4F3 (latar), `blush` #F9B6BA (hero, header, footer, chip terpilih), `dusty-pink` #DE9DA9 (bar pengumuman, garis kartu/filter), `ink` #3B2A25 (teks, judul, harga, tombol utama), `ink-soft` #5A4842 (teks sekunder), `white` (kartu, panel). **Jangan pakai** cocoa #551902 atau rose #DF7783 (pemilik menilai terlalu merah).
