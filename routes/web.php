@@ -14,6 +14,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
 Route::get('/produk/{product:slug}', [ProductController::class, 'show'])->name('produk.show');
 
+Route::view('/kebijakan-privasi', 'kebijakan-privasi')->name('privasi');
+
 // Keranjang boleh diisi tamu (F3); checkout wajib akun terverifikasi (aturan bisnis 5)
 Route::get('/keranjang', [CartController::class, 'index'])->name('keranjang');
 Route::post('/keranjang', [CartController::class, 'store'])->name('keranjang.store');

@@ -153,7 +153,10 @@
                     </div>
                 </div>
             </div>
-            <p class="border-t border-ink/15 pt-6 text-sm text-ink-soft">© {{ now()->year }} Angelia Perfume</p>
+            <div class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 border-t border-ink/15 pt-4 text-sm text-ink-soft">
+                <p>© {{ now()->year }} Angelia Perfume</p>
+                <a class="inline-flex min-h-[44px] items-center hover:underline" href="{{ route('privasi') }}">Kebijakan Privasi</a>
+            </div>
         </div>
     </footer>
 

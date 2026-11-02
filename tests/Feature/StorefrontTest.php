@@ -30,6 +30,12 @@ class StorefrontTest extends TestCase
         $this->get('/produk')->assertOk()->assertSee('Belum ada produk yang cocok');
     }
 
+    public function test_privacy_policy_is_linked_from_footer(): void
+    {
+        $this->get('/')->assertOk()->assertSee(route('privasi'));
+        $this->get('/kebijakan-privasi')->assertOk()->assertSee('Kebijakan Privasi')->assertSee('PT Jogja Creative Production');
+    }
+
     public function test_home_and_catalog_show_real_products(): void
     {
         $zataru = $this->product('Zataru Signature', Category::DECANT, [
