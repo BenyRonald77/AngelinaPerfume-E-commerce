@@ -29,7 +29,7 @@ class TinjauPanelProvider extends PanelProvider
             ->path('tinjau')
             ->login()
             ->brandName('Angelia Perfume')
-            ->favicon(asset('favicon.ico'))
+            ->favicon(asset('favicon-32.png').'?v=2')
             ->colors([
                 'primary' => Color::hex('#3B2A25'),
                 'gray' => Color::Stone,
