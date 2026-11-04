@@ -11,9 +11,16 @@
         ['label' => 'Decant', 'href' => route('produk.index', ['jenis' => 'decant']), 'active' => $jenis === 'decant'],
         ['label' => 'Full Size', 'href' => route('produk.index', ['jenis' => 'full-size']), 'active' => $jenis === 'full-size'],
     ];
-    // Di atas foto gelap: pil transparan berteks cream; di header pink: garis ink
-    $pill = $overlayHeader ? 'border border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20' : 'border border-ink/25 hover:bg-white/60';
-    $pillActive = $overlayHeader ? 'bg-cream text-ink' : 'bg-white';
+    // overlay-header: header transparan di atas hero Beranda. "light" untuk hero terang (teks ink),
+    // nilai lain untuk hero gelap (teks cream). Tanpa overlay: header pink biasa.
+    $overlay = $overlayHeader === 'light' ? 'light' : ($overlayHeader ? 'dark' : null);
+    $onDark = $overlay === 'dark';
+    $pill = match ($overlay) {
+        'dark' => 'border border-white/30 bg-white/10 backdrop-blur-sm hover:bg-white/20',
+        'light' => 'border border-ink/25 bg-white/40 hover:bg-white/70',
+        default => 'border border-ink/25 hover:bg-white/60',
+    };
+    $pillActive = $onDark ? 'bg-cream text-ink' : 'bg-white';
     $cartCount = app(\App\Services\CartService::class)->count();
 @endphp
 
@@ -41,9 +48,9 @@
 <body class="flex min-h-screen flex-col">
     <a href="#isi" class="sr-only z-50 rounded-full bg-ink px-5 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4">Langsung ke isi</a>
 
-    {{-- Mode overlay (Beranda): header transparan menempel di atas foto hero --}}
+    {{-- Mode overlay (Beranda): header transparan menempel di atas hero --}}
     <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
-        <header @class(['relative text-cream on-dark' => $overlayHeader, 'bg-blush text-ink' => ! $overlayHeader])
+        <header @class(['relative text-cream on-dark' => $onDark, 'relative text-ink' => $overlay === 'light', 'bg-blush text-ink' => ! $overlay])
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
             {{-- Header selebar layar: logo di tepi kiri, cari dan akun di tepi kanan --}}
             <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
@@ -68,13 +75,13 @@
                         <form action="{{ route('produk.index') }}" method="get" role="search" class="hidden lg:block">
                             <label for="cari-header" class="sr-only">Cari parfum, merek, atau aroma</label>
                             <div @class(['flex h-11 items-center rounded-full border pl-4 pr-1',
-                                         'border-white/30 bg-white/10 backdrop-blur-sm focus-within:bg-white/20' => $overlayHeader,
-                                         'border-ink/25 bg-white/70 focus-within:bg-white' => ! $overlayHeader])>
+                                         'border-white/30 bg-white/10 backdrop-blur-sm focus-within:bg-white/20' => $onDark,
+                                         'border-ink/25 bg-white/70 focus-within:bg-white' => ! $onDark])>
                                 <input id="cari-header" name="cari" type="search" value="{{ request()->routeIs('produk.index') ? request('cari') : '' }}"
                                        placeholder="Cari parfum atau merek"
                                        @class(['w-44 border-0 bg-transparent p-0 text-[15px] focus:ring-0 xl:w-56',
-                                               'placeholder:text-cream/80' => $overlayHeader, 'placeholder:text-ink-soft' => ! $overlayHeader])>
-                                <button type="submit" aria-label="Cari" @class(['flex h-9 w-9 items-center justify-center rounded-full', 'hover:bg-white/20' => $overlayHeader, 'hover:bg-blush' => ! $overlayHeader])>
+                                               'placeholder:text-cream/80' => $onDark, 'placeholder:text-ink-soft' => ! $onDark])>
+                                <button type="submit" aria-label="Cari" @class(['flex h-9 w-9 items-center justify-center rounded-full', 'hover:bg-white/20' => $onDark, 'hover:bg-blush' => ! $onDark])>
                                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
                                 </button>
                             </div>
@@ -95,7 +102,7 @@
                            class="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors {{ request()->routeIs('keranjang', 'checkout') ? $pillActive : $pill }}">
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
                             <span x-show="count > 0" x-text="count > 99 ? '99+' : count" @if (! $cartCount) style="display: none" @endif
-                                  class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1 pt-px text-xs font-bold text-white ring-2 {{ $overlayHeader ? 'ring-[#2B1E1A]' : 'ring-blush' }}">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                                  class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1 pt-px text-xs font-bold text-white ring-2 {{ $onDark ? 'ring-[#2B1E1A]' : 'ring-blush' }}">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
                         </a>
 
                         <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden {{ $pill }}"
@@ -108,7 +115,7 @@
                 </div>
 
                 {{-- Menu HP: navigasi dan pencarian --}}
-                <div id="menu-hp" x-show="menu" x-cloak @class(['mb-4 flex flex-col gap-3 md:hidden', 'rounded-3xl bg-[#2B1E1A] p-4' => $overlayHeader, 'pb-5' => ! $overlayHeader])>
+                <div id="menu-hp" x-show="menu" x-cloak @class(['mb-4 flex flex-col gap-3 md:hidden', 'rounded-3xl bg-[#2B1E1A] p-4' => $onDark, 'rounded-3xl bg-cream p-4 shadow-lg' => $overlay === 'light', 'pb-5' => ! $overlay])>
                     <form action="{{ route('produk.index') }}" method="get" role="search">
                         <label for="cari-hp" class="sr-only">Cari parfum, merek, atau aroma</label>
                         <div class="flex h-12 items-center rounded-full bg-white pl-4 pr-1 text-ink">

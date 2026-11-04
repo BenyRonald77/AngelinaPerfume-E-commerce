@@ -64,28 +64,25 @@
         @apply rounded-3xl border-2 border-dashed border-dusty-pink bg-white;
     }
 
-    /* Lapisan gelap di atas foto hero (permintaan pemilik, mengikuti contoh): cokelat ink pekat di kiri
-       untuk teks, terbuka di kanan untuk botol, dan menggelap di atas (header) dan bawah (strip Terlaris). */
-    .hero-shade {
-        background:
-            linear-gradient(to bottom, rgb(43 30 26 / 0.85) 0%, rgb(43 30 26 / 0) 22%),
-            linear-gradient(to top, rgb(43 30 26 / 0.92) 0%, rgb(43 30 26 / 0) 38%),
-            linear-gradient(to right, rgb(43 30 26 / 0.96) 0%, rgb(43 30 26 / 0.82) 38%, rgb(43 30 26 / 0.25) 70%, rgb(43 30 26 / 0.1) 100%);
+    /* Hero Beranda (permintaan klien: video pink, teks di kiri). Krem di kiri supaya teks ink terbaca,
+       makin pink ke kanan menyambung warna kelopak di video. */
+    .hero-pink {
+        background: linear-gradient(115deg, theme('colors.cream') 0%, #fde6e7 45%, theme('colors.blush') 100%);
     }
 
-    /* Di desktop foto hanya menutup sisi kanan; tepi kirinya dipudarkan supaya tidak ada garis potong */
+    /* Di desktop panel video menempel di kanan; tepi kirinya dipudarkan supaya tidak ada garis potong */
     @media (min-width: 1024px) {
-        .hero-photo {
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 38%);
-            mask-image: linear-gradient(to right, transparent 0%, #000 38%);
+        .hero-video {
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 30%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 30%);
         }
     }
 
-    /* Strip Terlaris di dasar hero: kaca gelap transparan (R-10: bersama pil header, dua elemen) */
-    .strip-dark {
-        background: rgb(43 30 26 / 0.55);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+    /* Strip Terlaris di dasar hero: kaca putih tipis di atas pink (satu-satunya elemen kaca di Beranda) */
+    .strip-light {
+        background: rgb(255 255 255 / 0.55);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
     }
 
     /* Animasi (MOTION 2, permintaan pemilik). Tujuan: hero dibaca berurutan (judul, ajakan, terlaris),

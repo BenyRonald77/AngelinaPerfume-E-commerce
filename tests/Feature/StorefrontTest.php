@@ -26,7 +26,7 @@ class StorefrontTest extends TestCase
 
     public function test_pages_open_with_empty_catalog(): void
     {
-        $this->get('/')->assertOk()->assertSeeText('Pilih wangi favoritmu sesuai ciri khas mu.');
+        $this->get('/')->assertOk()->assertSeeText('Pilih wangi favoritmu sesuai ciri khas mu.')->assertSee('videos/hero-parfum-pink.mp4');
         $this->get('/produk')->assertOk()->assertSee('Belum ada produk yang cocok');
     }
 

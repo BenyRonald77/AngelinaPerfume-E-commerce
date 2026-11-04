@@ -10,65 +10,66 @@
     ];
 @endphp
 
-<x-layouts.shop overlay-header description="Decant dan full size parfum original dari {{ $brandCount }} merek. Coba aromanya mulai 0,5 ml, botol kaca disegel sebelum dikirim.">
+<x-layouts.shop overlay-header="light" description="Decant dan full size parfum original dari {{ $brandCount }} merek. Coba aromanya mulai 0,5 ml, botol kaca disegel sebelum dikirim.">
     <x-slot:head>
-        <link rel="preload" as="image" href="{{ asset('images/hero/parfum-amber-1000.webp') }}"
-              imagesrcset="{{ asset('images/hero/parfum-amber-1000.webp') }} 1000w, {{ asset('images/hero/parfum-amber-1800.webp') }} 1800w"
-              imagesizes="(min-width: 1024px) 68vw, 100vw">
+        <link rel="preload" as="image" href="{{ asset('images/hero/parfum-pink-poster.webp') }}" fetchpriority="high">
     </x-slot:head>
 
-    {{-- Hero foto penuh (permintaan pemilik). Foto: "Aesthetic Parfume Photoshoot", Simply Mersah di Unsplash
-         (unsplash.com/photos/MLV5zTSzj98), Unsplash License: bebas dipakai komersial. Botol tanpa merek. --}}
-    <section class="on-dark relative isolate flex min-h-[720px] flex-col overflow-hidden bg-[#2B1E1A] text-cream lg:min-h-[800px]">
-        <img src="{{ asset('images/hero/parfum-amber-1000.webp') }}"
-             srcset="{{ asset('images/hero/parfum-amber-1000.webp') }} 1000w, {{ asset('images/hero/parfum-amber-1800.webp') }} 1800w"
-             sizes="(min-width: 1024px) 68vw, 100vw" width="1800" height="2025" fetchpriority="high" alt=""
-             class="hero-photo absolute inset-y-0 right-0 -z-10 h-full w-full object-cover object-[55%_45%] lg:w-[72%]">
-        <div aria-hidden="true" class="hero-shade absolute inset-0 -z-10"></div>
-        <div aria-hidden="true" class="pointer-events-none absolute bottom-24 left-0 -z-10 select-none whitespace-nowrap font-logo text-[130px] leading-none text-cream/[0.07] sm:text-[220px] lg:bottom-20 lg:text-[300px]">Angelia</div>
-
-        <div class="flex w-full flex-1 items-center px-4 pb-14 pt-32 sm:px-6 lg:px-10 lg:pt-36 xl:px-14">
-            <div class="flex max-w-xl flex-col items-start gap-6">
-                <h1 class="hero-enter font-display text-[38px] leading-[1.05] sm:text-[52px] lg:text-[60px]">Pilih wangi favoritmu sesuai ciri <span class="whitespace-nowrap">khas mu.</span></h1>
-                <p class="hero-enter text-lg leading-relaxed text-cream/90 sm:text-[19px]" style="--reveal-delay: 120ms">
+    {{-- Hero video pink (permintaan klien): botol parfum di atas kelopak mawar, kamera berputar pelan.
+         Video: "Fantasy, Perfume, Bottle" oleh MoonpetalMedia di Pixabay
+         (pixabay.com/videos/fantasy-perfume-bottle-glass-opal-351068/), Pixabay Content License: bebas dipakai
+         komersial tanpa atribusi. Video ini buatan AI (berlabel demikian di Pixabay); botolnya tanpa merek.
+         Desktop: panel kanan setinggi hero, tepi kirinya memudar ke latar pink. HP: kartu di bawah teks.
+         Diputar oleh app.js, bukan atribut autoplay: pengguna "reduced motion" dan mode hemat data hanya melihat poster. --}}
+    <section class="hero-pink relative isolate flex min-h-[720px] flex-col overflow-hidden text-ink lg:min-h-[800px]">
+        <div class="flex w-full flex-1 flex-col gap-10 px-4 pb-14 pt-32 sm:px-6 lg:flex-row lg:items-center lg:px-10 lg:pt-36 xl:px-14">
+            <div class="flex max-w-xl flex-col items-start gap-6 2xl:max-w-2xl">
+                <h1 class="hero-enter font-display text-[38px] leading-[1.05] sm:text-[52px] lg:text-[60px] 2xl:text-[72px]">Pilih wangi favoritmu sesuai ciri <span class="whitespace-nowrap">khas mu.</span></h1>
+                <p class="hero-enter text-lg leading-relaxed text-ink-soft sm:text-[19px] 2xl:text-[21px]" style="--reveal-delay: 120ms">
                     Decant dan full size original dari {{ $brandCount }} merek. Coba aromanya dulu dalam botol kecil, lalu pilih botol besar yang paling kamu suka. Reseller resmi MYKONOS, di Shopee sejak 2023.
                 </p>
                 <div class="hero-enter flex flex-wrap gap-3 pt-2" style="--reveal-delay: 240ms">
                     {{-- Satu-satunya tombol dengan panah: jalur utama ke katalog decant --}}
-                    <a href="{{ route('produk.index', ['jenis' => 'decant']) }}"
-                       class="inline-flex h-[52px] items-center gap-2 rounded-full bg-cream px-7 font-semibold text-ink transition-colors hover:bg-white active:bg-blush">
+                    <a href="{{ route('produk.index', ['jenis' => 'decant']) }}" class="btn-primary h-[52px]">
                         Belanja decant
                         <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
                     </a>
                     @if ($travel)
-                        <a href="{{ route('produk.show', $travel) }}"
-                           class="inline-flex h-[52px] items-center rounded-full border border-cream/70 px-7 font-semibold text-cream transition-colors hover:bg-white/10 active:bg-white/20">Travel size MYKONOS</a>
+                        <a href="{{ route('produk.show', $travel) }}" class="btn-outline h-[52px] bg-white/40">Travel size MYKONOS</a>
                     @endif
                 </div>
+            </div>
+
+            <div data-hero-video class="hero-enter hero-video relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-3xl bg-blush sm:aspect-[4/5] lg:absolute lg:inset-y-0 lg:right-0 lg:-z-10 lg:aspect-auto lg:w-[46%] lg:max-w-none lg:rounded-none 2xl:w-[38%]" style="--reveal-delay: 160ms">
+                <video muted playsinline preload="none" width="720" height="1280" aria-hidden="true" tabindex="-1"
+                       poster="{{ asset('images/hero/parfum-pink-poster.webp') }}"
+                       class="absolute inset-0 h-full w-full object-cover object-[50%_25%] transition-opacity 2xl:object-[50%_15%] duration-[1200ms] ease-linear">
+                    <source src="{{ asset('videos/hero-parfum-pink.mp4') }}" type="video/mp4">
+                </video>
             </div>
         </div>
 
         @if ($bestsellers->isNotEmpty())
             @php($pages = $bestsellers->chunk(3)->values())
             {{-- Strip Terlaris seperti contoh: label + penghitung di kiri, tiga produk per halaman --}}
-            <div class="hero-enter strip-dark border-t border-white/20" style="--reveal-delay: 400ms" x-data="{ page: 0, total: {{ $pages->count() }} }">
+            <div class="hero-enter strip-light relative z-10 border-t border-white/70" style="--reveal-delay: 400ms" x-data="{ page: 0, total: {{ $pages->count() }} }">
                 <div class="grid lg:grid-cols-[minmax(250px,22%)_1fr]">
-                    <div class="flex items-center justify-between gap-4 border-b border-white/20 px-4 py-5 sm:px-6 lg:flex-col lg:items-start lg:border-b-0 lg:border-r lg:py-6 lg:pl-10 lg:pr-8 xl:pl-14">
+                    <div class="flex items-center justify-between gap-4 border-b border-ink/10 px-4 py-5 sm:px-6 lg:flex-col lg:items-start lg:border-b-0 lg:border-r lg:py-6 lg:pl-10 lg:pr-8 xl:pl-14">
                         <div class="flex flex-col gap-1">
                             <h2 class="font-display text-[26px] leading-none">Terlaris</h2>
-                            <p class="text-[13px] text-cream/80">Paling banyak dibeli di Shopee, Juli–Oktober 2026</p>
+                            <p class="text-[13px] text-ink-soft">Paling banyak dibeli di Shopee, Juli–Oktober 2026</p>
                         </div>
                         @if ($pages->count() > 1)
                             <div class="flex items-center gap-1">
                                 <button type="button" @click="page = (page - 1 + total) % total" aria-label="Produk terlaris sebelumnya"
-                                        class="flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-white/15">
+                                        class="flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-white/60">
                                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 6-6 6 6 6"/></svg>
                                 </button>
                                 <span class="min-w-[52px] text-center text-sm tabular-nums" aria-live="polite">
-                                    <span x-text="String(page + 1).padStart(2, '0')">01</span><span class="text-cream/60">/{{ str_pad((string) $pages->count(), 2, '0', STR_PAD_LEFT) }}</span>
+                                    <span x-text="String(page + 1).padStart(2, '0')">01</span><span class="text-ink-soft">/{{ str_pad((string) $pages->count(), 2, '0', STR_PAD_LEFT) }}</span>
                                 </span>
                                 <button type="button" @click="page = (page + 1) % total" aria-label="Produk terlaris berikutnya"
-                                        class="flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-white/15">
+                                        class="flex h-11 w-11 items-center justify-center rounded-full transition-colors hover:bg-white/60">
                                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
                                 </button>
                             </div>
@@ -79,22 +80,22 @@
                         <ul class="grid lg:grid-cols-3" x-show="page === {{ $n }}" @if ($n > 0) style="display: none" @endif>
                             @foreach ($chunk as $product)
                                 @php($price = $product->cardPrice())
-                                <li class="border-b border-white/15 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
-                                    <a href="{{ route('produk.show', $product) }}" class="group flex h-full items-center gap-4 px-4 py-4 transition-colors hover:bg-white/10 sm:px-6 lg:py-6">
+                                <li class="border-b border-ink/10 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
+                                    <a href="{{ route('produk.show', $product) }}" class="group flex h-full items-center gap-4 px-4 py-4 transition-colors hover:bg-white/50 sm:px-6 lg:py-6">
                                         @if ($product->cover)
                                             <img src="{{ $product->cover->url(800) }}" width="76" height="76" alt="" loading="lazy" decoding="async" class="h-[76px] w-[76px] shrink-0 rounded-xl bg-white object-cover">
                                         @endif
                                         <span class="flex min-w-0 flex-col gap-0.5">
                                             <span class="flex items-baseline gap-1.5 whitespace-nowrap">
                                                 @if ($price)
-                                                    @if ($price['prefix'])<span class="text-sm text-cream/80">{{ $price['prefix'] }}</span>@endif
+                                                    @if ($price['prefix'])<span class="text-sm text-ink-soft">{{ $price['prefix'] }}</span>@endif
                                                     <span class="text-xl font-bold">{{ $price['amount'] }}</span>
                                                 @else
                                                     <span class="text-base font-semibold">Stok habis</span>
                                                 @endif
                                             </span>
                                             <span class="text-[15px] font-semibold group-hover:underline">{{ $product->name }}</span>
-                                            <span class="text-sm text-cream/80">{{ $product->cardMeta() }}</span>
+                                            <span class="text-sm text-ink-soft">{{ $product->cardMeta() }}</span>
                                         </span>
                                     </a>
                                 </li>
