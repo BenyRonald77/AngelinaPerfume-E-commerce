@@ -19,10 +19,10 @@
          Video: "Fantasy, Perfume, Bottle" oleh MoonpetalMedia di Pixabay
          (pixabay.com/videos/fantasy-perfume-bottle-glass-opal-351068/), Pixabay Content License: bebas dipakai
          komersial tanpa atribusi. Video ini buatan AI (berlabel demikian di Pixabay); botolnya tanpa merek.
-         Desktop: panel kanan setinggi hero, tepi kirinya memudar ke latar pink. HP: kartu di bawah teks.
+         Desktop: panel kanan setinggi hero. HP: selebar layar di bawah teks. Tepinya memudar lewat gambar ambient ke latar.
          Diputar oleh app.js, bukan atribut autoplay: pengguna "reduced motion" dan mode hemat data hanya melihat poster. --}}
     <section class="hero-pink relative isolate flex min-h-[720px] flex-col overflow-hidden text-ink lg:min-h-[800px]">
-        <div class="flex w-full flex-1 flex-col gap-10 px-4 pb-14 pt-32 sm:px-6 lg:flex-row lg:items-center lg:px-10 lg:pt-36 xl:px-14">
+        <div class="flex w-full flex-1 flex-col gap-4 px-4 pb-6 pt-32 sm:px-6 lg:flex-row lg:items-center lg:gap-10 lg:px-10 lg:pb-14 lg:pt-36 xl:px-14">
             <div class="flex max-w-xl flex-col items-start gap-6 2xl:max-w-2xl">
                 <h1 class="hero-enter font-display text-[38px] leading-[1.05] sm:text-[52px] lg:text-[60px] 2xl:text-[72px]">Pilih wangi favoritmu sesuai ciri <span class="whitespace-nowrap">khas mu.</span></h1>
                 <p class="hero-enter text-lg leading-relaxed text-ink-soft sm:text-[19px] 2xl:text-[21px]" style="--reveal-delay: 120ms">
@@ -40,12 +40,17 @@
                 </div>
             </div>
 
-            <div data-hero-video class="hero-enter hero-video relative aspect-[3/4] w-full max-w-md overflow-hidden rounded-3xl bg-blush sm:aspect-[4/5] lg:absolute lg:inset-y-0 lg:right-0 lg:-z-10 lg:aspect-auto lg:w-[46%] lg:max-w-none lg:rounded-none 2xl:w-[38%]" style="--reveal-delay: 160ms">
-                <video muted playsinline preload="none" width="720" height="1280" aria-hidden="true" tabindex="-1"
-                       poster="{{ asset('images/hero/parfum-pink-poster.webp') }}"
-                       class="absolute inset-0 h-full w-full object-cover object-[50%_25%] transition-opacity 2xl:object-[50%_15%] duration-[1200ms] ease-linear">
-                    <source src="{{ asset('videos/hero-parfum-pink.mp4') }}" type="video/mp4">
-                </video>
+            <div data-hero-video class="hero-enter relative -mx-4 sm:-mx-6 md:mx-auto md:w-[480px] lg:absolute lg:inset-y-0 lg:right-0 lg:-z-10 lg:mx-0 lg:w-[60%]" style="--reveal-delay: 160ms">
+                {{-- Ambient: warna rata-rata video yang diburamkan, mengisi peralihan dari video ke latar pink --}}
+                <img src="{{ asset('images/hero/parfum-pink-ambient.webp') }}" alt="" width="180" height="320" decoding="async"
+                     class="hero-ambient pointer-events-none absolute inset-x-0 -top-24 h-[calc(100%+12rem)] w-full object-cover md:-inset-x-24 md:w-[calc(100%+12rem)] lg:inset-x-0 lg:top-0 lg:h-full lg:w-full">
+                <div class="hero-video-box relative aspect-[2/3] overflow-hidden lg:absolute lg:inset-y-0 lg:right-0 lg:aspect-auto lg:w-[77%] 2xl:w-[64%]">
+                    <video muted playsinline preload="none" width="720" height="1280" aria-hidden="true" tabindex="-1"
+                           poster="{{ asset('images/hero/parfum-pink-poster.webp') }}"
+                           class="absolute inset-0 h-full w-full object-cover object-[50%_0%] transition-opacity duration-[1200ms] ease-linear lg:object-[50%_25%] 2xl:object-[50%_15%]">
+                        <source src="{{ asset('videos/hero-parfum-pink.mp4') }}" type="video/mp4">
+                    </video>
+                </div>
             </div>
         </div>
 
