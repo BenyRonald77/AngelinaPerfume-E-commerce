@@ -36,7 +36,7 @@
     @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&family=Pacifico&family=Shrikhand&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&family=Shrikhand&display=swap">
     {{-- Nomor versi memaksa browser mengambil ulang; sebelumnya favicon.ico kosong dan tersimpan di cache browser --}}
     <link rel="icon" href="{{ asset('favicon.ico') }}?v=3" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}?v=3">
@@ -56,7 +56,10 @@
             <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
                 {{-- Tiga kolom di layar lebar: menu tepat di tengah layar, tidak terdorong oleh lebar kotak cari --}}
                 <div class="flex items-center justify-between gap-3 py-4 xl:grid xl:grid-cols-[1fr_auto_1fr]">
-                    <a href="{{ route('home') }}" class="font-logo text-[26px] leading-tight sm:text-[30px] xl:justify-self-start">Angelia Perfume</a>
+                    {{-- Logo toko dari desain Canva (font TAN Songbird, satu baris), dipakai sebagai gambar: lisensi font Canva tidak mencakup web font --}}
+                    <a href="{{ route('home') }}" class="shrink-0 py-2 xl:justify-self-start">
+                        <img src="{{ asset('images/logo/angelia-perfume.webp') }}" alt="Angelia Perfume" width="748" height="96" class="h-[26px] w-auto xl:h-9">
+                    </a>
 
                     <nav aria-label="Menu utama" class="hidden flex-wrap gap-2 md:flex">
                         @foreach ($nav as $item)
@@ -145,7 +148,7 @@
         <div class="mx-auto flex max-w-7xl flex-col gap-12 px-4 pb-8 pt-14 sm:px-6 lg:px-12">
             <div class="flex flex-wrap justify-between gap-10">
                 <div class="flex max-w-sm flex-col gap-3">
-                    <span class="font-logo text-[30px] leading-snug">Angelia Perfume</span>
+                    <img src="{{ asset('images/logo/angelia-perfume.webp') }}" alt="Angelia Perfume" width="748" height="96" loading="lazy" class="h-9 w-auto self-start">
                     <p class="text-[15px] text-ink-soft">Decant dan full size parfum original. Cairan asli tanpa tambahan alkohol, dipindahkan ke botol kaca dan disegel sebelum dikirim.</p>
                 </div>
                 <div class="flex flex-wrap gap-x-14 gap-y-8 text-[15px]">

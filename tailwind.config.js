@@ -24,7 +24,6 @@ export default {
             },
             fontFamily: {
                 sans: ['"League Spartan"', ...defaultTheme.fontFamily.sans],
-                logo: ['Pacifico', 'cursive'],
                 display: ['Shrikhand', 'serif'],
             },
         },
