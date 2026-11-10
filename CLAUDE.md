@@ -19,7 +19,7 @@ Folder `C:\Users\ASUS\Documents\JCP IA\shopee-media\` (sekitar 1,4 GB):
 ## Stack
 Laravel 12 (PHP 8.2+), MySQL/MariaDB, Filament (panel admin di `/admin`), Blade + Livewire + Tailwind CSS (tanpa server Node di produksi), Laravel Breeze + Socialite (login Google), Xendit (Invoice API + webhook).
 - Pengembangan LOKAL dulu. Laptop: PHP 8.2 dan MariaDB dari XAMPP (`C:\xampp`, `mysql.exe` di `C:\xampp\mysql\bin`, belum di PATH), Composer, Node 24, Git, Python 3.12.
-- Hosting nanti: Rumahweb shared hosting (cPanel, LiteSpeed). Jangan bergantung pada queue worker yang selalu jalan, `proc_open`, atau `mail()`; tugas berkala lewat cron (`schedule:run`), email lewat SMTP, build aset di GitHub Actions.
+- Hosting nanti: DomaiNesia Nimbus Go (cPanel CloudLinux, Apache + Nginx). Dikonfirmasi support DomaiNesia: PHP 8.2/8.3 + ekstensi lewat Select PHP Version, inode unlimited, SSH key untuk deploy GitHub Actions, document root bisa ke `public`, symlink boleh, SMTP Gmail 587/465 tidak diblokir, **cron paling sering tiap 6 menit** (jadwal Laravel pakai everyMinute atau menit kelipatan 6). Jangan bergantung pada queue worker yang selalu jalan, `proc_open`, atau `mail()`; tugas berkala lewat cron (`schedule:run`), email lewat SMTP, build aset di GitHub Actions.
 
 ## Aturan bisnis (ringkas; detail di PRD)
 1. Produk → aroma → ukuran. **SKU = aroma × ukuran**, masing-masing punya harga, stok, berat, batas beli. Harga bisa berbeda antar aroma pada ukuran yang sama.
