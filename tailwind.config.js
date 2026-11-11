@@ -18,6 +18,8 @@ export default {
             colors: {
                 cream: '#FFF4F3',
                 blush: '#F9B6BA',
+                // Pink lembut latar hero; dipakai juga untuk header supaya senada (permintaan klien)
+                petal: '#FCE4E6',
                 'dusty-pink': '#DE9DA9',
                 ink: '#3B2A25',
                 'ink-soft': '#5A4842',

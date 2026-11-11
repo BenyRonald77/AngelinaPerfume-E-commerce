@@ -67,7 +67,7 @@
     /* Hero Beranda (permintaan klien: video pink, teks di kiri). Latar pink lembut satu warna; sorotan krem
        hanya di belakang teks desktop. */
     .hero-pink {
-        background-color: #fce4e6;
+        background-color: theme('colors.petal');
     }
 
     @media (min-width: 1024px) {

@@ -50,7 +50,7 @@
 
     {{-- Mode overlay (Beranda): header transparan menempel di atas hero --}}
     <div @class(['absolute inset-x-0 top-0 z-30' => $overlayHeader, 'relative z-30' => ! $overlayHeader])>
-        <header @class(['relative text-cream on-dark' => $onDark, 'relative text-ink' => $overlay === 'light', 'bg-blush text-ink' => ! $overlay])
+        <header @class(['relative text-cream on-dark' => $onDark, 'relative text-ink' => $overlay === 'light', 'border-b border-dusty-pink/30 bg-petal text-ink' => ! $overlay])
                 x-data="{ menu: false }" @keydown.escape.window="menu = false">
             {{-- Header selebar layar: logo di tepi kiri, cari dan akun di tepi kanan --}}
             <div class="w-full px-4 sm:px-6 lg:px-10 xl:px-14">
@@ -90,7 +90,8 @@
                             </div>
                         </form>
 
-                        <a href="{{ auth()->check() ? route('akun') : route('login') }}"
+                        {{-- Ikon akun langsung ke Pesanan (permintaan klien); Pesanan butuh email terverifikasi, jadi yang belum ke Profil --}}
+                        <a href="{{ auth()->check() ? (auth()->user()->hasVerifiedEmail() ? route('akun.pesanan') : route('akun')) : route('login') }}"
                            aria-label="{{ auth()->check() ? 'Akun saya' : 'Masuk atau daftar' }}"
                            @if (request()->routeIs('akun*')) aria-current="page" @endif
                            class="flex h-11 w-11 items-center justify-center rounded-full transition-colors {{ request()->routeIs('akun*') ? $pillActive : $pill }}">
@@ -105,7 +106,7 @@
                            class="relative flex h-11 w-11 items-center justify-center rounded-full transition-colors {{ request()->routeIs('keranjang', 'checkout') ? $pillActive : $pill }}">
                             <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14l-1.2 11.1a1 1 0 0 1-1 .9H7.2a1 1 0 0 1-1-.9z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>
                             <span x-show="count > 0" x-text="count > 99 ? '99+' : count" @if (! $cartCount) style="display: none" @endif
-                                  class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1 pt-px text-xs font-bold text-white ring-2 {{ $onDark ? 'ring-[#2B1E1A]' : 'ring-blush' }}">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+                                  class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1 pt-px text-xs font-bold text-white ring-2 {{ $onDark ? 'ring-[#2B1E1A]' : 'ring-petal' }}">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
                         </a>
 
                         <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden {{ $pill }}"

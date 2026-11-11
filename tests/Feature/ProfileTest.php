@@ -68,6 +68,15 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->refresh()->email_verified_at);
     }
 
+    public function test_header_account_icon_opens_orders_for_verified_users(): void
+    {
+        $this->actingAs(User::factory()->create())->get('/kebijakan-privasi')
+            ->assertSee('href="'.route('akun.pesanan').'"', false);
+
+        $this->actingAs(User::factory()->unverified()->create())->get('/kebijakan-privasi')
+            ->assertDontSee('href="'.route('akun.pesanan').'"', false);
+    }
+
     public function test_account_cannot_be_deleted_from_the_shop(): void
     {
         $user = User::factory()->create();
