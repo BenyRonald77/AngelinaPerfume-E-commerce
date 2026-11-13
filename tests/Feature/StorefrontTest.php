@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Enums\BrandOrigin;
 use App\Livewire\Catalog;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductAroma;
@@ -115,6 +117,24 @@ class StorefrontTest extends TestCase
     /**
      * @param  list<array{0: string, 1: ?float, 2: int, 3: int, 4?: array}>  $rows  aroma, ml, harga, stok, kolom aroma lain
      */
+    public function test_collections_group_brands_by_origin(): void
+    {
+        $afnan = Brand::create(['name' => 'AFNAN', 'slug' => 'afnan', 'origin' => BrandOrigin::Dubai]);
+        $mykonos = Brand::create(['name' => 'MYKONOS', 'slug' => 'mykonos', 'origin' => BrandOrigin::Lokal]);
+        $this->product('AFNAN 9 PM', Category::FULL_SIZE, [['9 PM', 100, 350000, 3]])->update(['brand_id' => $afnan->id]);
+        $this->product('MYKONOS Decant', Category::DECANT, [['Aphrodite', 2, 20000, 9]])->update(['brand_id' => $mykonos->id]);
+
+        // Kelompok tanpa produk (Designer, Lainnya) tidak tampil
+        $this->get('/')->assertOk()
+            ->assertSee('Parfum Timur Tengah')->assertSee('Brand parfum Indonesia')
+            ->assertSee(route('produk.index', ['asal' => 'dubai']), false)
+            ->assertDontSee('Rumah mode dunia');
+
+        Livewire::test(Catalog::class, ['asal' => 'dubai'])
+            ->assertSee('AFNAN 9 PM')
+            ->assertDontSee('MYKONOS Decant');
+    }
+
     private function product(string $name, string $category, array $rows): Product
     {
         $product = Product::create([

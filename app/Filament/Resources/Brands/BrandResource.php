@@ -2,16 +2,19 @@
 
 namespace App\Filament\Resources\Brands;
 
+use App\Enums\BrandOrigin;
 use App\Filament\Resources\Brands\Pages\ManageBrands;
 use App\Models\Brand;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use UnitEnum;
 
@@ -47,6 +50,12 @@ class BrandResource extends Resource
                     ->required()
                     ->alphaDash()
                     ->unique(ignoreRecord: true),
+                Select::make('origin')
+                    ->label('Asal merek')
+                    ->options(BrandOrigin::class)
+                    ->default(BrandOrigin::Lainnya)
+                    ->required()
+                    ->helperText('Menentukan kelompok Koleksi di Beranda dan filter Asal di katalog.'),
             ]);
     }
 
@@ -62,10 +71,19 @@ class BrandResource extends Resource
                     ->sortable(),
                 TextColumn::make('slug')
                     ->searchable(),
+                TextColumn::make('origin')
+                    ->label('Asal')
+                    ->badge()
+                    ->sortable(),
                 TextColumn::make('products_count')
                     ->label('Produk')
                     ->counts('products')
                     ->sortable(),
+            ])
+            ->filters([
+                SelectFilter::make('origin')
+                    ->label('Asal')
+                    ->options(BrandOrigin::class),
             ])
             ->recordActions([
                 EditAction::make(),

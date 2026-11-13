@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Enums\BrandOrigin;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
@@ -52,6 +53,10 @@ class Catalog extends Component
     #[Url(except: [])]
     public array $merek = [];
 
+    /** Asal merek (Koleksi di Beranda): lokal, designer, dubai, lainnya */
+    #[Url(except: '')]
+    public string $asal = '';
+
     #[Url(except: [])]
     public array $ukuran = [];
 
@@ -71,7 +76,7 @@ class Catalog extends Component
 
     public function resetFilters(): void
     {
-        $this->reset(['search', 'jenis', 'merek', 'ukuran', 'harga', 'urut', 'tersedia']);
+        $this->reset(['search', 'jenis', 'asal', 'merek', 'ukuran', 'harga', 'urut', 'tersedia']);
         $this->resetPage();
     }
 
@@ -98,7 +103,7 @@ class Catalog extends Component
 
     public function activeFilterCount(): int
     {
-        return (int) ($this->jenis !== '') + (int) ($this->harga !== '') + count($this->merek) + count($this->ukuran) + (int) ($this->search !== '');
+        return (int) ($this->jenis !== '') + (int) ($this->asal !== '') + (int) ($this->harga !== '') + count($this->merek) + count($this->ukuran) + (int) ($this->search !== '');
     }
 
     public function render()
@@ -140,6 +145,10 @@ class Catalog extends Component
         // Jenis yang belum punya produk tetap disaring (hasil kosong), bukan diabaikan
         if ($this->jenis !== '' && $this->jenis !== Category::HADIAH && array_key_exists($this->jenis, Category::DEFAULTS)) {
             $query->whereHas('category', fn (Builder $q) => $q->where('slug', $this->jenis));
+        }
+
+        if ($origin = BrandOrigin::tryFrom($this->asal)) {
+            $query->whereHas('brand', fn (Builder $q) => $q->where('origin', $origin));
         }
 
         $brands = array_values(array_filter($this->merek, 'is_string'));

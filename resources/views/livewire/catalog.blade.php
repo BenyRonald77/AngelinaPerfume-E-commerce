@@ -5,6 +5,7 @@
     $panel = 'fixed inset-x-4 bottom-4 z-30 max-h-[70vh] overflow-y-auto rounded-3xl border border-dusty-pink/60 bg-white p-5 shadow-xl sm:absolute sm:inset-x-auto sm:bottom-auto sm:left-0 sm:top-full sm:mt-2 sm:w-80';
     $option = 'flex min-h-[44px] items-center gap-3 rounded-xl px-2 text-[15px] hover:bg-cream';
     $jenisLabel = $this->categories->firstWhere('slug', $jenis)?->name;
+    $asalLabel = \App\Enums\BrandOrigin::tryFrom($asal)?->label();
     $sizeLabels = $this->sizes->filter(fn ($s) => in_array((float) $s->ml, array_map('floatval', $ukuran), true))->pluck('label');
 @endphp
 
@@ -83,6 +84,25 @@
                         <label class="{{ $option }}"><input type="radio" wire:model.live="jenis" value="" class="h-5 w-5 border-ink-soft text-ink focus:ring-ink"> Semua</label>
                         @foreach ($this->categories as $category)
                             <label class="{{ $option }}"><input type="radio" wire:model.live="jenis" value="{{ $category->slug }}" class="h-5 w-5 border-ink-soft text-ink focus:ring-ink"> {{ $category->name }}</label>
+                        @endforeach
+                    </fieldset>
+                    <button type="button" class="btn-primary mt-3 w-full sm:hidden" @click="open = null">Selesai</button>
+                </div>
+            </div>
+
+            {{-- Asal merek (Koleksi di Beranda) --}}
+            <div class="relative">
+                <button type="button" class="{{ $filterButton }}" @click="open = open === 'asal' ? null : 'asal'"
+                        :aria-expanded="(open === 'asal').toString()" aria-expanded="false" aria-controls="f-asal-{{ $limit }}">
+                    Asal @if ($asalLabel)<span class="font-semibold">· {{ $asalLabel }}</span>@endif
+                    <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </button>
+                <div id="f-asal-{{ $limit }}" x-show="open === 'asal'" x-cloak class="{{ $panel }}">
+                    <fieldset>
+                        <legend class="pb-2 font-semibold">Asal merek</legend>
+                        <label class="{{ $option }}"><input type="radio" wire:model.live="asal" value="" class="h-5 w-5 border-ink-soft text-ink focus:ring-ink"> Semua</label>
+                        @foreach (\App\Enums\BrandOrigin::cases() as $origin)
+                            <label class="{{ $option }}"><input type="radio" wire:model.live="asal" value="{{ $origin->value }}" class="h-5 w-5 border-ink-soft text-ink focus:ring-ink"> {{ $origin->label() }}</label>
                         @endforeach
                     </fieldset>
                     <button type="button" class="btn-primary mt-3 w-full sm:hidden" @click="open = null">Selesai</button>
@@ -171,8 +191,8 @@
     {{-- Hasil --}}
     <div class="flex items-center justify-between gap-4">
         <p class="text-[15px] text-ink-soft" aria-live="polite">
-            <span wire:loading.remove wire:target="search, jenis, merek, ukuran, harga, tersedia, urut, resetFilters, gotoPage, nextPage, previousPage">{{ number_format($total, 0, ',', '.') }} produk</span>
-            <span wire:loading wire:target="search, jenis, merek, ukuran, harga, tersedia, urut, resetFilters, gotoPage, nextPage, previousPage">Memuat produk…</span>
+            <span wire:loading.remove wire:target="search, jenis, asal, merek, ukuran, harga, tersedia, urut, resetFilters, gotoPage, nextPage, previousPage">{{ number_format($total, 0, ',', '.') }} produk</span>
+            <span wire:loading wire:target="search, jenis, asal, merek, ukuran, harga, tersedia, urut, resetFilters, gotoPage, nextPage, previousPage">Memuat produk…</span>
         </p>
     </div>
 
@@ -190,7 +210,7 @@
             <button type="button" wire:click="resetFilters" class="btn-outline">Hapus semua filter</button>
         </div>
     @else
-        <div wire:loading.class="opacity-50" wire:target="search, jenis, merek, ukuran, harga, tersedia, urut, resetFilters, gotoPage, nextPage, previousPage"
+        <div wire:loading.class="opacity-50" wire:target="search, jenis, asal, merek, ukuran, harga, tersedia, urut, resetFilters, gotoPage, nextPage, previousPage"
              class="grid grid-cols-2 gap-x-4 gap-y-9 transition-opacity sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 lg:gap-y-10">
             @foreach ($products as $product)
                 <x-product-card :product="$product" :bestseller="$bestsellerIds->contains($product->id)" wire:key="p-{{ $product->id }}" />
@@ -199,7 +219,7 @@
 
         @if ($limit > 0)
             @if ($total > $products->count() || $allVisible > $total)
-                <a href="{{ route('produk.index', array_filter(['cari' => $search ?: null, 'jenis' => $jenis ?: null, 'merek' => $merek ?: null, 'ukuran' => $ukuran ?: null, 'harga' => $harga ?: null, 'tersedia' => $tersedia ? null : 0, 'urut' => $urut !== 'terlaris' ? $urut : null])) }}"
+                <a href="{{ route('produk.index', array_filter(['cari' => $search ?: null, 'jenis' => $jenis ?: null, 'asal' => $asal ?: null, 'merek' => $merek ?: null, 'ukuran' => $ukuran ?: null, 'harga' => $harga ?: null, 'tersedia' => $tersedia ? null : 0, 'urut' => $urut !== 'terlaris' ? $urut : null])) }}"
                    class="btn-outline self-center">
                     {{ $this->activeFilterCount() > 0 ? 'Lihat semua '.number_format($total, 0, ',', '.').' produk yang cocok' : 'Lihat semua '.number_format($allVisible, 0, ',', '.').' produk' }}
                 </a>
