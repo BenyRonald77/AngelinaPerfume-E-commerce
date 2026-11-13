@@ -63,7 +63,7 @@ class BrandResource extends Resource
                     ->disk('public')
                     ->directory('merek')
                     ->maxSize(1024)
-                    ->helperText('Opsional. Tampil di halaman Merek; tanpa logo dipakai foto produk terlaris merek ini.'),
+                    ->helperText('Opsional. Mengganti logo bawaan di halaman Merek. Kosongkan untuk memakai logo bawaan; merek tanpa logo tampil sebagai nama saja.'),
             ]);
     }
 

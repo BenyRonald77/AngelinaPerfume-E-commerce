@@ -131,10 +131,18 @@ class StorefrontTest extends TestCase
             ->assertSee('Rumah mode dunia')->assertSee('Segera hadir')
             ->assertDontSee(route('produk.index', ['asal' => 'designer']), false);
 
-        // Halaman Merek: dikelompokkan per asal, tautan ke katalog merek itu
+        // Halaman Merek: semua merek A-Z tanpa kelompok asal, logo bawaan, tautan ke katalog merek itu
         $this->get('/merek')->assertOk()
-            ->assertSeeInOrder(['Lokal', 'MYKONOS', 'Designer', 'Segera hadir', 'Dubai', 'AFNAN'])
+            ->assertSeeInOrder(['AFNAN', 'MYKONOS'])
+            ->assertDontSee('Segera hadir')
+            ->assertSee(asset('images/merek/afnan.webp'), false)
             ->assertSee(route('produk.index', ['merek' => ['afnan']]), false);
+
+        // Merek tanpa logo bawaan tampil sebagai teks; unggahan admin mengalahkan logo bawaan
+        $tanpaLogo = Brand::create(['name' => 'Merek Baru', 'slug' => 'merek-baru-tanpa-logo']);
+        $this->assertNull($tanpaLogo->logoUrl());
+        $afnan->update(['logo' => 'merek/afnan-baru.png']);
+        $this->assertStringEndsWith('/storage/merek/afnan-baru.png', $afnan->logoUrl());
 
         Livewire::test(Catalog::class, ['asal' => 'dubai'])
             ->assertSee('AFNAN 9 PM')
