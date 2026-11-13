@@ -45,10 +45,12 @@ class StorefrontTest extends TestCase
             ['Topaz', 2, 20000, 0],
         ]);
 
-        $this->get('/')->assertOk()->assertSee('Zataru Signature')->assertSee('mulai')->assertSee('Rp9.000');
+        // Harga tidak tampil di kartu (permintaan klien), hanya di halaman produk
+        $this->get('/')->assertOk()->assertSee('Zataru Signature')->assertDontSee('Rp9.000');
 
         Livewire::test(Catalog::class)
             ->assertSee('Zataru Signature')
+            ->assertDontSee('Rp9.000')
             ->set('search', 'bergamot')
             ->assertSee('Zataru Signature')
             ->set('search', 'tidakada')
@@ -58,6 +60,33 @@ class StorefrontTest extends TestCase
             ->assertDontSee('Zataru Signature');
 
         $this->assertSame('zataru-signature', $zataru->slug);
+    }
+
+    public function test_price_sort_works_without_prices_on_cards(): void
+    {
+        $this->product('Parfum Murah', Category::DECANT, [['Satu', 2, 15000, 5]]);
+        $this->product('Parfum Mahal', Category::DECANT, [['Dua', 2, 90000, 5]]);
+
+        Livewire::test(Catalog::class)
+            ->set('urut', 'termurah')
+            ->assertSeeInOrder(['Parfum Murah', 'Parfum Mahal'])
+            ->assertDontSee('Rp15.000')
+            ->set('urut', 'termahal')
+            ->assertSeeInOrder(['Parfum Mahal', 'Parfum Murah']);
+    }
+
+    public function test_chat_widget_opens_whatsapp(): void
+    {
+        config(['toko.whatsapp_number' => '6285136364040']);
+        $this->get('/merek')->assertOk()
+            ->assertSee('Tanya Angelia')
+            ->assertSee('Bantu pilih parfum')
+            ->assertSee('Mulai ngobrol')
+            ->assertSee('https://wa.me/6285136364040?text=', false);
+
+        // Nomor belum diisi: placeholder, bukan tautan rusak
+        config(['toko.whatsapp_number' => '']);
+        $this->get('/merek')->assertOk()->assertSee('[NOMOR TOKO]')->assertDontSee('Mulai ngobrol');
     }
 
     public function test_sold_out_products_hide_behind_availability_filter(): void
@@ -135,6 +164,7 @@ class StorefrontTest extends TestCase
         $this->get('/merek')->assertOk()
             ->assertSeeInOrder(['AFNAN', 'MYKONOS'])
             ->assertDontSee('Segera hadir')
+            ->assertSee('Huruf A, 1 merek')->assertSee('Huruf M, 1 merek')->assertDontSee('Huruf B,')
             ->assertSee(asset('images/merek/afnan.webp'), false)
             ->assertSee(route('produk.index', ['merek' => ['afnan']]), false);
 

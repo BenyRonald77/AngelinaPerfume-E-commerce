@@ -147,7 +147,8 @@
     </main>
 
     <footer class="bg-blush text-ink">
-        <div class="mx-auto flex max-w-7xl flex-col gap-12 px-4 pb-8 pt-14 sm:px-6 lg:px-12">
+        {{-- pb besar: baris terakhir footer jangan tertutup tombol Tanya Angelia di pojok kanan bawah --}}
+        <div class="mx-auto flex max-w-7xl flex-col gap-12 px-4 pb-28 pt-14 sm:px-6 lg:px-12">
             <div class="flex flex-wrap justify-between gap-10">
                 <div class="flex max-w-sm flex-col gap-3">
                     <img src="{{ asset('images/logo/angelia-perfume.webp') }}" alt="Angelia Perfume" width="748" height="96" loading="lazy" class="h-9 w-auto self-start">
@@ -179,8 +180,10 @@
         </div>
     </footer>
 
+    <x-chat-widget />
+
     {{-- Pesan singkat: hasil aksi (flash dari server, event "toko-pesan" dari Livewire) dan galat permintaan Livewire.
-         Satu-satunya elemen berbayang di halaman: melayang di atas isi. --}}
+         Melayang di atas isi (dan di atas tombol Tanya Angelia), jadi berbayang. --}}
     @php($flash = session('flash_error') ?? session('flash'))
     <div x-data="{ pesan: @js($flash ?? ''), link: @js(session('flash_cart') && request()->routeIs('produk.*') ? route('keranjang') : ''),
                    tampil(p, l = '') { this.pesan = p; this.link = l; clearTimeout(this.t); this.t = setTimeout(() => this.pesan = '', 8000) } }"

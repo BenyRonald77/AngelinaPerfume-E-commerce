@@ -263,7 +263,8 @@
                 <h2 id="judul-terkait" class="font-display text-[32px] leading-tight">Kamu mungkin suka</h2>
                 <div class="grid grid-cols-2 gap-x-4 gap-y-9 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4">
                     @foreach ($related as $item)
-                        <x-product-card :product="$item" data-reveal style="--reveal-delay: {{ $loop->index * 80 }}ms" />
+                        {{-- Reveal di pembungkus: transisinya (0,7 dtk + jeda) jangan menimpa animasi hover kartu --}}
+                        <div data-reveal style="--reveal-delay: {{ $loop->index * 80 }}ms"><x-product-card :product="$item" /></div>
                     @endforeach
                 </div>
             </section>

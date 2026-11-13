@@ -44,7 +44,9 @@ Laravel 12 (PHP 8.2+), MySQL/MariaDB, Filament (panel admin di `/admin`), Blade 
 - Logo: gambar satu baris dari desain Canva toko (font TAN Songbird) di `public/images/logo/`; font itu tidak dipasang sebagai web font (lisensi Canva). Ikon tab dari huruf A logo (`public/favicon.ico`). Font Google: Shrikhand (judul & nama produk), League Spartan (teks, harga, tombol).
 - Mobile-first, target sentuh minimal 44 px, kontras teks minimal 4.5:1. Ikuti tata letak kanvas, kecuali hero Beranda (keputusan klien): video botol parfum pink di kanan, teks di kiri + strip Terlaris, lingkaran Koleksi, grid produk dengan filter, halaman produk dengan chip aroma (foto kecil), pilihan ukuran, notes, bar progres hadiah, tab Deskripsi/Pengiriman/Garansi.
 - Rating bintang tidak ditampilkan sampai ada ulasan nyata.
-- Halaman Merek (`/merek`): semua merek A-Z tanpa kelompok asal (keputusan klien). Logo resmi di `public/images/merek/<slug>.webp` (diambil dari situs resmi merek atau direktori brand Female Daily); unggahan admin di Merek → Logo menggantikannya; merek tanpa logo tampil sebagai nama saja.
+- Kartu produk (katalog, Terlaris, produk terkait) tidak menampilkan harga (keputusan klien); urutan dan filter harga tetap jalan, harga tampil di halaman produk. Kartu produk dan merek membesar saat hover (motion-safe).
+- Tombol "Tanya Angelia" (logo A, pojok kanan bawah, `components/chat-widget`): chat langsung ke WhatsApp atau form Nama/Gender/Aroma/Acara yang disusun jadi pesan WhatsApp di browser; isian tidak dikirim ke server.
+- Halaman Merek (`/merek`): semua merek A-Z tanpa kelompok asal (keputusan klien), dengan filter huruf awal (`?huruf=K`). Logo resmi di `public/images/merek/<slug>.webp` (diambil dari situs resmi merek atau direktori brand Female Daily); unggahan admin di Merek → Logo menggantikannya; merek tanpa logo tampil sebagai nama saja.
 
 ## Konvensi & batasan
 - Rahasia (Xendit, Google, kurir, SMTP) hanya di `.env`; jangan di-commit.

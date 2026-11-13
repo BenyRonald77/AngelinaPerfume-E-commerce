@@ -168,21 +168,16 @@
                     @foreach ($pages as $n => $chunk)
                         <ul class="grid lg:grid-cols-3" x-show="page === {{ $n }}" @if ($n > 0) style="display: none" @endif>
                             @foreach ($chunk as $product)
-                                @php($price = $product->cardPrice())
                                 <li class="border-b border-ink/10 last:border-b-0 lg:border-b-0 lg:border-r lg:last:border-r-0">
                                     <a href="{{ route('produk.show', $product) }}" class="group flex h-full items-center gap-4 px-4 py-4 transition-colors hover:bg-cream sm:px-6 lg:py-6">
                                         @if ($product->cover)
-                                            <img src="{{ $product->cover->url(800) }}" width="76" height="76" alt="" loading="lazy" decoding="async" class="h-[76px] w-[76px] shrink-0 rounded-xl bg-white object-cover">
+                                            <img src="{{ $product->cover->url(800) }}" width="76" height="76" alt="" loading="lazy" decoding="async" class="h-[76px] w-[76px] shrink-0 rounded-xl bg-white object-cover transition-transform duration-300 ease-out motion-safe:group-hover:scale-110 motion-safe:group-focus-visible:scale-110">
                                         @endif
+                                        {{-- Tanpa harga (permintaan klien); harga tampil di halaman produk --}}
                                         <span class="flex min-w-0 flex-col gap-0.5">
-                                            <span class="flex items-baseline gap-1.5 whitespace-nowrap">
-                                                @if ($price)
-                                                    @if ($price['prefix'])<span class="text-sm text-ink-soft">{{ $price['prefix'] }}</span>@endif
-                                                    <span class="text-xl font-bold">{{ $price['amount'] }}</span>
-                                                @else
-                                                    <span class="text-base font-semibold">Stok habis</span>
-                                                @endif
-                                            </span>
+                                            @unless ($product->cardPrice())
+                                                <span class="text-sm font-semibold">Stok habis</span>
+                                            @endunless
                                             <span class="text-[15px] font-semibold group-hover:underline">{{ $product->name }}</span>
                                             <span class="text-sm text-ink-soft">{{ $product->cardMeta() }}</span>
                                         </span>
