@@ -10,6 +10,7 @@
         ['label' => 'Katalog', 'href' => route('produk.index'), 'active' => request()->routeIs('produk.index') && ! $jenis],
         ['label' => 'Decant', 'href' => route('produk.index', ['jenis' => 'decant']), 'active' => $jenis === 'decant'],
         ['label' => 'Full Size', 'href' => route('produk.index', ['jenis' => 'full-size']), 'active' => $jenis === 'full-size'],
+        ['label' => 'Merek', 'href' => route('merek'), 'active' => request()->routeIs('merek')],
     ];
     // overlay-header: header transparan di atas hero Beranda. "light" untuk hero terang (teks ink),
     // nilai lain untuk hero gelap (teks cream). Tanpa overlay: header pink biasa.
@@ -61,7 +62,7 @@
                         <img src="{{ asset('images/logo/angelia-perfume.webp') }}" alt="Angelia Perfume" width="748" height="96" class="h-[26px] w-auto xl:h-9">
                     </a>
 
-                    <nav aria-label="Menu utama" class="hidden flex-wrap gap-2 md:flex">
+                    <nav aria-label="Menu utama" class="hidden flex-wrap gap-2 lg:flex">
                         @foreach ($nav as $item)
                             <a href="{{ $item['href'] }}"
                                @if ($item['active']) aria-current="page" @endif
@@ -75,14 +76,14 @@
                     </nav>
 
                     <div class="flex items-center gap-2 xl:justify-self-end">
-                        <form action="{{ route('produk.index') }}" method="get" role="search" class="hidden lg:block">
+                        <form action="{{ route('produk.index') }}" method="get" role="search" class="hidden xl:block">
                             <label for="cari-header" class="sr-only">Cari parfum, merek, atau aroma</label>
                             <div @class(['flex h-11 items-center rounded-full border pl-4 pr-1',
                                          'border-white/30 bg-white/10 backdrop-blur-sm focus-within:bg-white/20' => $onDark,
                                          'border-ink/25 bg-white/70 focus-within:bg-white' => ! $onDark])>
                                 <input id="cari-header" name="cari" type="search" value="{{ request()->routeIs('produk.index') ? request('cari') : '' }}"
                                        placeholder="Cari parfum atau merek"
-                                       @class(['w-44 border-0 bg-transparent p-0 text-[15px] focus:ring-0 xl:w-56',
+                                       @class(['w-40 border-0 bg-transparent p-0 text-[15px] focus:ring-0 2xl:w-56',
                                                'placeholder:text-cream/80' => $onDark, 'placeholder:text-ink-soft' => ! $onDark])>
                                 <button type="submit" aria-label="Cari" @class(['flex h-9 w-9 items-center justify-center rounded-full', 'hover:bg-white/20' => $onDark, 'hover:bg-blush' => ! $onDark])>
                                     <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -109,7 +110,7 @@
                                   class="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-ink px-1 pt-px text-xs font-bold text-white ring-2 {{ $onDark ? 'ring-[#2B1E1A]' : 'ring-petal' }}">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
                         </a>
 
-                        <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full transition-colors md:hidden {{ $pill }}"
+                        <button type="button" class="flex h-11 w-11 items-center justify-center rounded-full transition-colors lg:hidden {{ $pill }}"
                                 @click="menu = !menu" :aria-expanded="menu.toString()" aria-expanded="false" aria-controls="menu-hp"
                                 aria-label="Menu">
                             <svg x-show="!menu" aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
@@ -119,7 +120,7 @@
                 </div>
 
                 {{-- Menu HP: navigasi dan pencarian --}}
-                <div id="menu-hp" x-show="menu" x-cloak @class(['mb-4 flex flex-col gap-3 md:hidden', 'rounded-3xl bg-[#2B1E1A] p-4' => $onDark, 'rounded-3xl bg-cream p-4 shadow-lg' => $overlay === 'light', 'pb-5' => ! $overlay])>
+                <div id="menu-hp" x-show="menu" x-cloak @class(['mb-4 flex flex-col gap-3 lg:hidden', 'rounded-3xl bg-[#2B1E1A] p-4' => $onDark, 'rounded-3xl bg-cream p-4 shadow-lg' => $overlay === 'light', 'pb-5' => ! $overlay])>
                     <form action="{{ route('produk.index') }}" method="get" role="search">
                         <label for="cari-hp" class="sr-only">Cari parfum, merek, atau aroma</label>
                         <div class="flex h-12 items-center rounded-full bg-white pl-4 pr-1 text-ink">

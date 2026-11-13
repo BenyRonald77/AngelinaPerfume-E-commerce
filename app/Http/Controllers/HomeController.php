@@ -32,9 +32,9 @@ class HomeController extends Controller
 
     /**
      * Koleksi per asal merek (permintaan klien): foto dari produk terlaris di kelompok itu.
-     * Kelompok tanpa produk tidak ditampilkan (aturan bisnis 9).
+     * Semua kelompok tampil; yang belum punya produk ditandai "Segera hadir" (permintaan klien).
      *
-     * @return list<array{origin: BrandOrigin, product: Product, brands: int, products: int, href: string}>
+     * @return list<array{origin: BrandOrigin, product: ?Product, brands: int, products: int, href: ?string}>
      */
     private function collections(): array
     {
@@ -42,16 +42,13 @@ class HomeController extends Controller
         foreach (BrandOrigin::cases() as $origin) {
             $inOrigin = fn (Builder $q) => $q->whereHas('brand', fn (Builder $b) => $b->where('origin', $origin));
             $products = Product::visible()->where($inOrigin)->count();
-            if ($products === 0) {
-                continue;
-            }
 
             $items[] = [
                 'origin' => $origin,
-                'product' => ProductCards::query()->where($inOrigin)->orderByDesc('sold_count')->first(),
+                'product' => $products ? ProductCards::query()->where($inOrigin)->orderByDesc('sold_count')->first() : null,
                 'brands' => Brand::where('origin', $origin)->whereHas('products', fn (Builder $q) => $q->visible())->count(),
                 'products' => $products,
-                'href' => route('produk.index', ['asal' => $origin->value]),
+                'href' => $products ? route('produk.index', ['asal' => $origin->value]) : null,
             ];
         }
 

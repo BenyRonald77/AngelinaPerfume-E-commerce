@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountOrderController;
 use App\Http\Controllers\Admin\PrintOrderController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PaymentController;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
 Route::get('/produk/{product:slug}', [ProductController::class, 'show'])->name('produk.show');
+Route::get('/merek', [BrandController::class, 'index'])->name('merek');
 
 Route::view('/kebijakan-privasi', 'kebijakan-privasi')->name('privasi');
 

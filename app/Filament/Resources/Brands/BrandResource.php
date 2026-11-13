@@ -8,6 +8,7 @@ use App\Models\Brand;
 use BackedEnum;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Resource;
@@ -56,6 +57,13 @@ class BrandResource extends Resource
                     ->default(BrandOrigin::Lainnya)
                     ->required()
                     ->helperText('Menentukan kelompok Koleksi di Beranda dan filter Asal di katalog.'),
+                FileUpload::make('logo')
+                    ->label('Logo')
+                    ->image()
+                    ->disk('public')
+                    ->directory('merek')
+                    ->maxSize(1024)
+                    ->helperText('Opsional. Tampil di halaman Merek; tanpa logo dipakai foto produk terlaris merek ini.'),
             ]);
     }
 

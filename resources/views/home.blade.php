@@ -65,16 +65,29 @@
                     <ul @class(['grid grid-cols-2', 'lg:grid-cols-4' => count($collections) >= 4, 'lg:grid-cols-3' => count($collections) === 3, 'lg:grid-cols-2' => count($collections) <= 2])>
                         @foreach ($collections as $item)
                             <li class="border-b border-r border-ink/10 even:border-r-0 lg:border-b-0 lg:even:border-r lg:last:border-r-0">
-                                <a href="{{ $item['href'] }}" class="group flex h-full items-center gap-3 px-4 py-4 transition-colors hover:bg-white/50 sm:gap-4 sm:px-6 lg:py-6">
-                                    @if ($item['product']?->cover)
-                                        <img src="{{ $item['product']->cover->url(800) }}" width="76" height="76" alt="" loading="lazy" decoding="async" class="h-14 w-14 shrink-0 rounded-xl bg-white object-cover sm:h-[76px] sm:w-[76px]">
-                                    @endif
-                                    <span class="flex min-w-0 flex-col gap-0.5">
-                                        <span class="font-display text-xl leading-tight group-hover:underline sm:text-[22px]">{{ $item['origin']->label() }}</span>
-                                        <span class="text-sm text-ink-soft">{{ $item['origin']->description() }}</span>
-                                        <span class="text-[13px] text-ink-soft">{{ $item['brands'] }} merek · {{ $item['products'] }} produk</span>
-                                    </span>
-                                </a>
+                                @php($tile = 'flex h-full items-center gap-3 px-4 py-4 sm:gap-4 sm:px-6 lg:py-6')
+                                @if ($item['href'])
+                                    <a href="{{ $item['href'] }}" class="group {{ $tile }} transition-colors hover:bg-white/50">
+                                        @if ($item['product']?->cover)
+                                            <img src="{{ $item['product']->cover->url(800) }}" width="76" height="76" alt="" loading="lazy" decoding="async" class="h-14 w-14 shrink-0 rounded-xl bg-white object-cover sm:h-[76px] sm:w-[76px]">
+                                        @endif
+                                        <span class="flex min-w-0 flex-col gap-0.5">
+                                            <span class="font-display text-xl leading-tight group-hover:underline sm:text-[22px]">{{ $item['origin']->label() }}</span>
+                                            <span class="text-sm text-ink-soft">{{ $item['origin']->description() }}</span>
+                                            <span class="text-[13px] text-ink-soft">{{ $item['brands'] }} merek · {{ $item['products'] }} produk</span>
+                                        </span>
+                                    </a>
+                                @else
+                                    {{-- Kelompok tanpa produk tetap tampil (permintaan klien), bukan tautan supaya tidak membuka katalog kosong --}}
+                                    <div class="{{ $tile }}">
+                                        <span aria-hidden="true" class="h-14 w-14 shrink-0 rounded-xl border-2 border-dashed border-dusty-pink/70 bg-white/40 sm:h-[76px] sm:w-[76px]"></span>
+                                        <span class="flex min-w-0 flex-col gap-0.5">
+                                            <span class="font-display text-xl leading-tight sm:text-[22px]">{{ $item['origin']->label() }}</span>
+                                            <span class="text-sm text-ink-soft">{{ $item['origin']->description() }}</span>
+                                            <span class="text-[13px] font-semibold text-ink-soft">Segera hadir</span>
+                                        </span>
+                                    </div>
+                                @endif
                             </li>
                         @endforeach
                     </ul>

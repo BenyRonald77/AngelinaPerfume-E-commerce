@@ -124,11 +124,17 @@ class StorefrontTest extends TestCase
         $this->product('AFNAN 9 PM', Category::FULL_SIZE, [['9 PM', 100, 350000, 3]])->update(['brand_id' => $afnan->id]);
         $this->product('MYKONOS Decant', Category::DECANT, [['Aphrodite', 2, 20000, 9]])->update(['brand_id' => $mykonos->id]);
 
-        // Kelompok tanpa produk (Designer, Lainnya) tidak tampil
+        // Kelompok tanpa produk tetap tampil dengan "Segera hadir", tanpa tautan ke katalog kosong
         $this->get('/')->assertOk()
             ->assertSee('Parfum Timur Tengah')->assertSee('Brand parfum Indonesia')
             ->assertSee(route('produk.index', ['asal' => 'dubai']), false)
-            ->assertDontSee('Rumah mode dunia');
+            ->assertSee('Rumah mode dunia')->assertSee('Segera hadir')
+            ->assertDontSee(route('produk.index', ['asal' => 'designer']), false);
+
+        // Halaman Merek: dikelompokkan per asal, tautan ke katalog merek itu
+        $this->get('/merek')->assertOk()
+            ->assertSeeInOrder(['Lokal', 'MYKONOS', 'Designer', 'Segera hadir', 'Dubai', 'AFNAN'])
+            ->assertSee(route('produk.index', ['merek' => ['afnan']]), false);
 
         Livewire::test(Catalog::class, ['asal' => 'dubai'])
             ->assertSee('AFNAN 9 PM')
