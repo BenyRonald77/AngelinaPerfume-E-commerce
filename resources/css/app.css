@@ -161,6 +161,15 @@
         outline-color: theme('colors.cream');
     }
 
+    /* Banner bergeser: digeser dengan jari, scrollbar disembunyikan (titik penanda sudah menunjukkan posisi) */
+    .banner-track {
+        scrollbar-width: none;
+    }
+
+    .banner-track::-webkit-scrollbar {
+        display: none;
+    }
+
     .eyebrow {
         @apply text-xs font-semibold uppercase tracking-[0.08em] text-ink-soft;
     }

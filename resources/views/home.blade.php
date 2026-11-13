@@ -112,6 +112,8 @@
         @endif
     </section>
 
+    <x-banner-carousel />
+
     @if ($collections)
         <section aria-labelledby="judul-koleksi" class="mx-auto flex max-w-7xl flex-col items-center gap-10 px-4 pb-10 pt-20 sm:px-6 lg:px-12 lg:pt-24">
             <div data-reveal class="flex flex-col items-center gap-2 text-center">
