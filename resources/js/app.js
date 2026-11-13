@@ -21,6 +21,47 @@ if ('IntersectionObserver' in window && ! reducedMotion) {
     document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
 }
 
+// WhatsApp: buka aplikasinya langsung (permintaan klien). Tautan wa.me di laptop selalu berhenti di halaman web
+// "Lanjutkan ke chat", dan di HP kadang juga. Skema whatsapp:// membuka WhatsApp Desktop atau aplikasi HP.
+// Bila dalam 2 detik halaman tidak kehilangan fokus (aplikasi tidak terpasang), pindah ke wa.me sebagai cadangan.
+function bukaWhatsApp(waUrl) {
+    const url = new URL(waUrl);
+    const phone = url.pathname.replace(/\D/g, '');
+    const text = url.searchParams.get('text');
+    const app = `whatsapp://send?phone=${phone}${text ? `&text=${encodeURIComponent(text)}` : ''}`;
+
+    let pergi = false;
+    const tandai = () => { pergi = true; };
+    const pantau = (on) => {
+        const fn = on ? 'addEventListener' : 'removeEventListener';
+        window[fn]('blur', tandai);
+        window[fn]('pagehide', tandai);
+        document[fn]('visibilitychange', tandai);
+    };
+
+    pantau(true);
+    window.location.href = app;
+    setTimeout(() => {
+        pantau(false);
+        if (! pergi && document.visibilityState === 'visible') {
+            window.location.href = waUrl;
+        }
+    }, 2000);
+}
+
+window.bukaWhatsApp = bukaWhatsApp;
+
+// Semua tautan wa.me di situs (widget Tanya Angelia, stok habis, footer) lewat jalur yang sama.
+// Klik tengah/Ctrl tetap membuka tab biasa; [data-wa-web] dibiarkan ke WhatsApp Web.
+document.addEventListener('click', (event) => {
+    const link = event.target.closest?.('a[href^="https://wa.me/"]:not([data-wa-web])');
+    if (! link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+    }
+    event.preventDefault();
+    bukaWhatsApp(link.href);
+});
+
 // Video hero Beranda (permintaan klien). Tidak diputar bila pengguna memilih "reduced motion" atau mode
 // hemat data: yang tampil hanya poster. Sambungan akhir-ke-awal klip tidak mulus, jadi setiap putaran
 // dipudarkan (crossfade) ke salinan kedua yang mulai dari awal. Video berhenti saat hero tidak terlihat.

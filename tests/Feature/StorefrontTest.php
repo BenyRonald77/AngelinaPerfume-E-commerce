@@ -3,13 +3,18 @@
 namespace Tests\Feature;
 
 use App\Enums\BrandOrigin;
+use App\Enums\Role;
+use App\Filament\Pages\StoreSettings;
 use App\Livewire\Catalog;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductAroma;
 use App\Models\ProductVariant;
+use App\Models\Setting;
 use App\Models\Size;
+use App\Models\User;
+use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Livewire\Livewire;
@@ -81,12 +86,59 @@ class StorefrontTest extends TestCase
         $this->get('/merek')->assertOk()
             ->assertSee('Tanya Angelia')
             ->assertSee('Bantu pilih parfum')
+            ->assertSee('Unisex')
+            ->assertSee('Atau tulis sendiri')
             ->assertSee('Mulai ngobrol')
             ->assertSee('https://wa.me/6285136364040?text=', false);
 
         // Nomor belum diisi: placeholder, bukan tautan rusak
         config(['toko.whatsapp_number' => '']);
         $this->get('/merek')->assertOk()->assertSee('[NOMOR TOKO]')->assertDontSee('Mulai ngobrol');
+    }
+
+    public function test_promo_tab_follows_admin_settings(): void
+    {
+        // Isi awal jujur: belum ada voucher di checkout, jadi "segera hadir"
+        $this->get('/')->assertOk()->assertSee('Promo untukmu')->assertSee('Voucher spesial segera hadir');
+
+        $this->actingAs(User::factory()->create(['role' => Role::Admin]));
+        Filament::setCurrentPanel('admin');
+        Livewire::test(StoreSettings::class)
+            ->set('data.promo_judul', 'Belanja Rp250.000 dapat voucher Rp50.000')
+            ->set('data.promo_tautan', 'https://situs-lain.test')
+            ->call('save')
+            ->assertHasErrors(['data.promo_tautan'])
+            ->set('data.promo_tautan', '/produk?jenis=decant')
+            ->call('save')
+            ->assertHasNoErrors();
+
+        $this->assertSame('Belanja Rp250.000 dapat voucher Rp50.000', Setting::get('promo_judul'));
+        $this->assertSame('1700', Setting::get('packaging_fee'));
+        $this->get('/')->assertSee('Belanja Rp250.000 dapat voucher Rp50.000')->assertSee(url('/produk?jenis=decant'), false);
+
+        Setting::put('promo_aktif', '0');
+        $this->get('/')->assertDontSee('Promo untukmu');
+    }
+
+    public function test_brand_menu_lists_brands_by_letter_and_origin(): void
+    {
+        $afnan = Brand::create(['name' => 'AFNAN', 'slug' => 'afnan', 'origin' => BrandOrigin::Dubai]);
+        $this->product('AFNAN 9 PM', Category::FULL_SIZE, [['9 PM', 100, 350000, 3]])->update(['brand_id' => $afnan->id]);
+        Brand::create(['name' => 'Tanpa Produk', 'slug' => 'tanpa-produk']);
+
+        // Dropdown Merek di navbar: tab nama/asal, indeks huruf, tautan ke katalog merek
+        $this->get('/')->assertOk()
+            ->assertSee('Nama Merek')->assertSee('Asal Merek')
+            ->assertSee('Huruf A')
+            ->assertSee(route('produk.index', ['merek' => ['afnan']]), false)
+            ->assertDontSee('Tanpa Produk')
+            ->assertSee('Lihat semua merek dan logonya');
+
+        // Filter Merek di katalog memakai panel yang sama dengan centang
+        Livewire::test(Catalog::class)
+            ->assertSee('Cari merek…')
+            ->set('merek', ['afnan'])
+            ->assertSee('AFNAN 9 PM');
     }
 
     public function test_sold_out_products_hide_behind_availability_filter(): void
@@ -163,7 +215,7 @@ class StorefrontTest extends TestCase
         // Halaman Merek: semua merek A-Z tanpa kelompok asal, logo bawaan, tautan ke katalog merek itu
         $this->get('/merek')->assertOk()
             ->assertSeeInOrder(['AFNAN', 'MYKONOS'])
-            ->assertDontSee('Segera hadir')
+            ->assertDontSee('id="judul-dubai"', false)
             ->assertSee('Huruf A, 1 merek')->assertSee('Huruf M, 1 merek')->assertDontSee('Huruf B,')
             ->assertSee(asset('images/merek/afnan.webp'), false)
             ->assertSee(route('produk.index', ['merek' => ['afnan']]), false);

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\BrandOrigin;
+use App\Support\BrandMenu;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +15,13 @@ class Brand extends Model
     protected function casts(): array
     {
         return ['origin' => BrandOrigin::class];
+    }
+
+    protected static function booted(): void
+    {
+        // Menu merek di header memakai cache; perubahan nama/asal langsung terlihat
+        static::saved(fn () => BrandMenu::forget());
+        static::deleted(fn () => BrandMenu::forget());
     }
 
     public function products(): HasMany

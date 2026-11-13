@@ -41,11 +41,14 @@ Laravel 12 (PHP 8.2+), MySQL/MariaDB, Filament (panel admin di `/admin`), Blade 
 
 ## Desain
 - Palet (token Tailwind): `cream` #FFF4F3 (latar), `petal` #FCE4E6 (latar hero dan header), `blush` #F9B6BA (footer, chip terpilih), `dusty-pink` #DE9DA9 (garis kartu/filter), `ink` #3B2A25 (teks, judul, harga, tombol utama), `ink-soft` #5A4842 (teks sekunder), `white` (kartu, panel). **Jangan pakai** cocoa #551902 atau rose #DF7783 (pemilik menilai terlalu merah).
-- Logo: gambar satu baris dari desain Canva toko (font TAN Songbird) di `public/images/logo/`; font itu tidak dipasang sebagai web font (lisensi Canva). Ikon tab dari huruf A logo (`public/favicon.ico`). Font Google: Shrikhand (judul & nama produk), League Spartan (teks, harga, tombol).
+- Logo: gambar satu baris dari desain Canva toko (font TAN Songbird) di `public/images/logo/`; font itu tidak dipasang sebagai web font (lisensi Canva). Ikon tab dari huruf A logo (`public/favicon.ico`). Font Google: Fraunces versi lembut tebal 800 (judul & nama produk; tegak, klien tidak mau huruf miring, jadi Shrikhand diganti), League Spartan (teks, harga, tombol). Jangan pakai teks italic.
 - Mobile-first, target sentuh minimal 44 px, kontras teks minimal 4.5:1. Ikuti tata letak kanvas, kecuali hero Beranda (keputusan klien): video botol parfum pink di kanan, teks di kiri + strip Terlaris, lingkaran Koleksi, grid produk dengan filter, halaman produk dengan chip aroma (foto kecil), pilihan ukuran, notes, bar progres hadiah, tab Deskripsi/Pengiriman/Garansi.
 - Rating bintang tidak ditampilkan sampai ada ulasan nyata.
 - Kartu produk (katalog, Terlaris, produk terkait) tidak menampilkan harga (keputusan klien); urutan dan filter harga tetap jalan, harga tampil di halaman produk. Kartu produk dan merek membesar saat hover (motion-safe).
-- Tombol "Tanya Angelia" (logo A, pojok kanan bawah, `components/chat-widget`): chat langsung ke WhatsApp atau form Nama/Gender/Aroma/Acara yang disusun jadi pesan WhatsApp di browser; isian tidak dikirim ke server.
+- Tombol "Tanya Angelia" (logo A, pojok kanan bawah, `components/chat-widget`): chat langsung ke WhatsApp atau form Nama/Gender/Aroma/Acara (aroma dan acara boleh ditulis sendiri) yang disusun jadi pesan WhatsApp di browser; isian tidak dikirim ke server.
+- Semua tautan wa.me dibuka lewat aplikasi WhatsApp dulu (`whatsapp://`, `resources/js/app.js`), wa.me hanya cadangan bila aplikasi tidak ada.
+- Merek di navbar dan filter Merek katalog memakai `components/brand-picker` (contoh SOCO: tab Nama/Asal, cari, indeks A-Z); data dari `App\Support\BrandMenu` (cache 10 menit).
+- Pop-up promo di tepi kiri (`components/promo-tab`), isi diatur di Pengaturan toko → Pop-up promo. Isi awal "Voucher spesial segera hadir" karena checkout belum punya voucher; jangan tulis promo yang belum berlaku.
 - Halaman Merek (`/merek`): semua merek A-Z tanpa kelompok asal (keputusan klien), dengan filter huruf awal (`?huruf=K`). Logo resmi di `public/images/merek/<slug>.webp` (diambil dari situs resmi merek atau direktori brand Female Daily); unggahan admin di Merek → Logo menggantikannya; merek tanpa logo tampil sebagai nama saja.
 
 ## Konvensi & batasan

@@ -3,7 +3,6 @@
 namespace App\Livewire;
 
 use App\Enums\BrandOrigin;
-use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Size;
@@ -87,12 +86,6 @@ class Catalog extends Component
             ->whereHas('products', fn (Builder $q) => $q->where('is_visible', true))
             ->orderBy('sort_order')
             ->get();
-    }
-
-    #[Computed]
-    public function brands()
-    {
-        return Brand::whereHas('products', fn (Builder $q) => $q->visible())->orderBy('name')->get(['name', 'slug']);
     }
 
     #[Computed]

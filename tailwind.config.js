@@ -26,7 +26,8 @@ export default {
             },
             fontFamily: {
                 sans: ['"League Spartan"', ...defaultTheme.fontFamily.sans],
-                display: ['Shrikhand', 'serif'],
+                // Fraunces versi lembut, tegak (klien tidak mau judul miring seperti Shrikhand); senada dengan logo TAN Songbird
+                display: ['Fraunces', 'Georgia', 'serif'],
             },
         },
     },

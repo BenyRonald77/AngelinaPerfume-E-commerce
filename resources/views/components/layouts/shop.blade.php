@@ -37,7 +37,7 @@
     @endif
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700&family=Shrikhand&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,800,100,0&family=League+Spartan:wght@400;500;600;700&display=swap">
     {{-- Nomor versi memaksa browser mengambil ulang; sebelumnya favicon.ico kosong dan tersimpan di cache browser --}}
     <link rel="icon" href="{{ asset('favicon.ico') }}?v=3" sizes="any">
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32.png') }}?v=3">
@@ -64,6 +64,31 @@
 
                     <nav aria-label="Menu utama" class="hidden flex-wrap gap-2 lg:flex">
                         @foreach ($nav as $item)
+                            @if ($item['label'] === 'Merek')
+                                {{-- Dropdown Merek (contoh SOCO dari klien): buka saat kursor di atasnya atau diklik; Esc/klik di luar menutup --}}
+                                <div class="relative" x-data="{ buka: false, t: null }"
+                                     @mouseenter="clearTimeout(t); t = setTimeout(() => buka = true, 80)"
+                                     @mouseleave="clearTimeout(t); t = setTimeout(() => buka = false, 200)"
+                                     @keydown.escape="buka && (buka = false, $refs.tombol.focus())" @click.outside="buka = false">
+                                    <button type="button" x-ref="tombol" aria-controls="menu-merek" :aria-expanded="buka.toString()" aria-expanded="false"
+                                            @click="($event.pointerType === 'mouse' && buka) || (buka = !buka)"
+                                            @class([
+                                                'inline-flex min-h-[44px] items-center gap-1.5 rounded-full px-[18px] pt-0.5 text-[15px] font-medium transition-colors',
+                                                $pillActive => $item['active'],
+                                                $pill => ! $item['active'],
+                                            ])>
+                                        {{ $item['label'] }}
+                                        <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="-mt-0.5 transition-transform" :class="buka && 'rotate-180'"><path d="m6 9 6 6 6-6"/></svg>
+                                    </button>
+                                    {{-- pt-2 menjembatani celah tombol-panel supaya kursor tidak "jatuh" dan menutup panel --}}
+                                    <div id="menu-merek" x-show="buka" x-cloak class="absolute right-0 top-full z-40 w-[440px] pt-2">
+                                        <div class="rounded-3xl border border-dusty-pink/50 bg-white p-5 shadow-xl">
+                                            <x-brand-picker mode="link" id="nav-merek" />
+                                        </div>
+                                    </div>
+                                </div>
+                                @continue
+                            @endif
                             <a href="{{ $item['href'] }}"
                                @if ($item['active']) aria-current="page" @endif
                                @class([
@@ -180,6 +205,7 @@
         </div>
     </footer>
 
+    <x-promo-tab />
     <x-chat-widget />
 
     {{-- Pesan singkat: hasil aksi (flash dari server, event "toko-pesan" dari Livewire) dan galat permintaan Livewire.

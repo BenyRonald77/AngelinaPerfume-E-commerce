@@ -3,7 +3,7 @@
      Isian form tidak dikirim ke server website; hanya disusun di browser menjadi teks pesan. --}}
 @php
     $wa = \App\Support\WhatsApp::baseUrl();
-    $genders = ['Perempuan', 'Laki-laki'];
+    $genders = ['Perempuan', 'Laki-laki', 'Unisex'];
     $aromas = ['Sweet', 'Fruity', 'Floral', 'Fresh', 'Woody', 'Musky', 'Spicy'];
     $acaras = ['Sehari-hari', 'Kerja / kuliah', 'Kencan', 'Pesta / acara malam', 'Liburan', 'Hadiah'];
     $chip = 'inline-flex min-h-[44px] cursor-pointer items-center rounded-full border border-dusty-pink bg-white px-4 text-[15px] transition-colors hover:bg-blush/40 peer-checked:border-ink peer-checked:bg-blush peer-checked:font-semibold peer-focus-visible:ring-2 peer-focus-visible:ring-ink peer-focus-visible:ring-offset-2';
@@ -17,8 +17,11 @@
             nama: '',
             gender: '',
             aroma: [],
+            aromaLain: '',
             acara: '',
+            acaraLain: '',
             galat: {},
+            terkirim: '',
             bukaTutup() {
                 this.buka ? this.tutup() : this.bukaPanel();
             },
@@ -44,8 +47,11 @@
                 this.galat = {};
                 if (!this.nama.trim()) this.galat.nama = 'Isi nama kamu.';
                 if (!this.gender) this.galat.gender = 'Pilih salah satu.';
-                if (!this.aroma.length) this.galat.aroma = 'Pilih minimal satu aroma.';
-                if (!this.acara) this.galat.acara = 'Pilih acaranya.';
+                // Pilihan chip dan isian sendiri digabung; cukup salah satu terisi
+                const aroma = [...this.aroma, this.aromaLain.trim()].filter(Boolean);
+                const acara = [this.acara, this.acaraLain.trim()].filter(Boolean);
+                if (!aroma.length) this.galat.aroma = 'Pilih atau tulis minimal satu aroma.';
+                if (!acara.length) this.galat.acara = 'Pilih atau tulis acaranya.';
                 const pertama = Object.keys(this.galat)[0];
                 if (pertama) {
                     this.$nextTick(() => this.$refs['f-' + pertama]?.focus());
@@ -57,12 +63,14 @@
                     '',
                     'Nama: ' + this.nama.trim(),
                     'Gender: ' + this.gender,
-                    'Aroma: ' + this.aroma.join(', '),
-                    'Acara: ' + this.acara,
+                    'Aroma: ' + aroma.join(', '),
+                    'Acara: ' + acara.join(', '),
                     '',
                     '(dikirim dari form di ' + location.host + ')',
                 ].join('\n');
-                window.open(wa + '?text=' + encodeURIComponent(pesan), '_blank', 'noopener');
+                // Buka aplikasi WhatsApp langsung (app.js), web hanya cadangan bila aplikasi tidak ada
+                this.terkirim = wa + '?text=' + encodeURIComponent(pesan);
+                window.bukaWhatsApp(this.terkirim);
             },
         }));
     });
@@ -147,6 +155,9 @@
                             <label><input type="checkbox" value="{{ $a }}" x-model="aroma" class="peer sr-only" @if ($loop->first) x-ref="f-aroma" @endif><span class="{{ $chip }}">{{ $a }}</span></label>
                         @endforeach
                     </div>
+                    <label for="tanya-aroma-lain" class="pt-1 text-sm text-ink-soft">Atau tulis sendiri</label>
+                    <input id="tanya-aroma-lain" type="text" x-model="aromaLain" maxlength="80" placeholder="Misalnya vanilla, kopi, aquatic"
+                           class="h-11 rounded-xl border-dusty-pink px-4 text-base focus:border-ink focus:ring-0">
                     <p id="tanya-galat-aroma" x-show="galat.aroma" x-text="galat.aroma" class="text-sm font-medium text-red-700"></p>
                 </fieldset>
 
@@ -157,11 +168,18 @@
                             <label><input type="radio" name="tanya-acara" value="{{ $o }}" x-model="acara" class="peer sr-only" @if ($loop->first) x-ref="f-acara" @endif><span class="{{ $chip }}">{{ $o }}</span></label>
                         @endforeach
                     </div>
+                    <label for="tanya-acara-lain" class="pt-1 text-sm text-ink-soft">Atau tulis sendiri</label>
+                    <input id="tanya-acara-lain" type="text" x-model="acaraLain" maxlength="80" placeholder="Misalnya wisuda, lamaran, interview"
+                           class="h-11 rounded-xl border-dusty-pink px-4 text-base focus:border-ink focus:ring-0">
                     <p id="tanya-galat-acara" x-show="galat.acara" x-text="galat.acara" class="text-sm font-medium text-red-700"></p>
                 </fieldset>
 
                 @if ($wa)
                     <button type="submit" class="btn-primary w-full">Mulai ngobrol</button>
+                    <p x-show="terkirim" x-cloak class="-mt-2 text-sm" role="status">
+                        Membuka aplikasi WhatsApp… Tidak terbuka?
+                        <a :href="terkirim" target="_blank" rel="noopener" data-wa-web class="font-semibold underline">Buka WhatsApp Web</a>
+                    </p>
                 @else
                     <p class="card-dashed px-4 py-3 text-[15px]">Nomor WhatsApp toko: [NOMOR TOKO]</p>
                 @endif

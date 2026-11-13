@@ -5,7 +5,9 @@ namespace App\Filament\Pages;
 use App\Models\Setting;
 use BackedEnum;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
@@ -34,7 +36,11 @@ class StoreSettings extends Page
 
     public function mount(): void
     {
-        $this->form->fill(collect(Setting::DEFAULTS)->mapWithKeys(fn ($default, $key) => [$key => Setting::int($key)])->all());
+        $this->form->fill([
+            ...collect(Setting::DEFAULTS)->mapWithKeys(fn ($default, $key) => [$key => Setting::int($key)])->all(),
+            ...collect(Setting::PROMO_DEFAULTS)->mapWithKeys(fn ($default, $key) => [$key => Setting::get($key)])->all(),
+            'promo_aktif' => Setting::get('promo_aktif') === '1',
+        ]);
     }
 
     public function form(Schema $schema): Schema
@@ -64,6 +70,20 @@ class StoreSettings extends Page
                             ->numeric()->integer()->minValue(0)->required()
                             ->helperText('Halaman produk menampilkan "Sisa sedikit" di bawah angka ini.'),
                     ]),
+                Section::make('Pop-up promo')
+                    ->description('Tab di tepi kiri toko yang terbuka sekali untuk pengunjung baru. Tulis hanya promo yang benar-benar berlaku.')
+                    ->columns(2)
+                    ->schema([
+                        Toggle::make('promo_aktif')->label('Tampilkan pop-up promo')->columnSpanFull(),
+                        TextInput::make('promo_label')->label('Tulisan di tab')->maxLength(30)->required(),
+                        TextInput::make('promo_judul')->label('Judul')->maxLength(80)->required(),
+                        Textarea::make('promo_teks')->label('Isi')->rows(3)->maxLength(240)->columnSpanFull(),
+                        TextInput::make('promo_tombol')->label('Tulisan tombol')->maxLength(30),
+                        TextInput::make('promo_tautan')->label('Tautan tombol')->maxLength(200)
+                            ->helperText('Alamat di situs ini, misalnya /produk?jenis=decant. Kosongkan bila tanpa tombol.')
+                            ->rules(['nullable', 'regex:/^\/(?!\/)/']),
+                        TextInput::make('promo_catatan')->label('Catatan kecil')->maxLength(60)->placeholder('*S&K berlaku'),
+                    ]),
             ]);
     }
 
@@ -84,7 +104,11 @@ class StoreSettings extends Page
     public function save(): void
     {
         foreach ($this->form->getState() as $key => $value) {
-            Setting::put($key, (string) (int) $value);
+            Setting::put($key, match (true) {
+                $key === 'promo_aktif' => $value ? '1' : '0',
+                array_key_exists($key, Setting::PROMO_DEFAULTS) => trim((string) $value),
+                default => (string) (int) $value,
+            });
         }
 
         Notification::make()->title('Pengaturan disimpan.')->success()->send();

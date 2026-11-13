@@ -116,20 +116,11 @@
                     Merek @if (count($merek))<span class="font-semibold">· {{ count($merek) }}</span>@endif
                     <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                 </button>
-                <div id="f-merek-{{ $limit }}" x-show="open === 'merek'" x-cloak class="{{ $panel }}" x-data="{ q: '' }">
+                {{-- Panel lebih lebar: indeks huruf A-Z muat dua baris seperti contoh klien --}}
+                <div id="f-merek-{{ $limit }}" x-show="open === 'merek'" x-cloak class="{{ str_replace('sm:w-80', 'sm:w-[440px]', $panel) }}">
                     <fieldset>
-                        <legend class="pb-2 font-semibold">Merek</legend>
-                        <label for="cari-merek-{{ $limit }}" class="sr-only">Cari merek</label>
-                        <input id="cari-merek-{{ $limit }}" type="search" x-model="q" placeholder="Cari merek"
-                               class="mb-2 h-11 w-full rounded-full border-dusty-pink px-4 text-base focus:border-ink focus:ring-0">
-                        <div class="max-h-72 overflow-y-auto sm:max-h-64">
-                            @foreach ($this->brands as $brand)
-                                <label class="{{ $option }}" x-show="q === '' || @js(mb_strtolower($brand->name)).includes(q.toLowerCase())">
-                                    <input type="checkbox" wire:model.live="merek" value="{{ $brand->slug }}" class="h-5 w-5 rounded border-ink-soft text-ink focus:ring-ink">
-                                    {{ $brand->name }}
-                                </label>
-                            @endforeach
-                        </div>
+                        <legend class="sr-only">Merek</legend>
+                        <x-brand-picker mode="check" :id="'katalog-merek-'.$limit" />
                     </fieldset>
                     <button type="button" class="btn-primary mt-3 w-full sm:hidden" @click="open = null">Selesai</button>
                 </div>

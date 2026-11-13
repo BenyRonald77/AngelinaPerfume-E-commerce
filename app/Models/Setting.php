@@ -15,6 +15,20 @@ class Setting extends Model
         'payment_window_hours' => '24',
     ];
 
+    /**
+     * Pop-up promo di tepi kiri (contoh SOCO dari klien). Isi awal sengaja "segera hadir": situs sudah live
+     * dan checkout belum punya voucher, jadi jangan menjanjikan potongan yang belum ada (aturan bisnis 9).
+     */
+    public const PROMO_DEFAULTS = [
+        'promo_aktif' => '1',
+        'promo_label' => 'Promo untukmu',
+        'promo_judul' => 'Voucher spesial segera hadir',
+        'promo_teks' => 'Nantikan voucher dan promo dari Angelia Perfume. Sambil menunggu, coba aroma favoritmu mulai 0,5 ml.',
+        'promo_catatan' => '*S&K berlaku',
+        'promo_tombol' => 'Lihat katalog',
+        'promo_tautan' => '/produk',
+    ];
+
     protected $primaryKey = 'key';
 
     public $incrementing = false;
@@ -27,7 +41,7 @@ class Setting extends Model
     {
         $all = Cache::rememberForever('settings', fn () => self::query()->pluck('value', 'key')->all());
 
-        return $all[$key] ?? $default ?? self::DEFAULTS[$key] ?? null;
+        return $all[$key] ?? $default ?? self::DEFAULTS[$key] ?? self::PROMO_DEFAULTS[$key] ?? null;
     }
 
     public static function put(string $key, ?string $value): void

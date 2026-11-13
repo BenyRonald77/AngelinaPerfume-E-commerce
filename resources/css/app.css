@@ -11,6 +11,13 @@
         @apply bg-cream text-ink font-sans antialiased;
     }
 
+    /* Judul: Fraunces lembut (SOFT 100), tanpa huruf "wonky", tidak pernah miring */
+    .font-display {
+        font-variation-settings: 'SOFT' 100, 'WONK' 0;
+        font-weight: 800;
+        font-style: normal;
+    }
+
     /* Kontrol yang bisa dipakai selalu menunjukkan kursor tangan; yang nonaktif tidak */
     a[href],
     button:not(:disabled),
