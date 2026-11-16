@@ -1,6 +1,6 @@
-name: Deploy ke VPS
+name: Deploy ke hosting
 
-# Setiap push ke main: jalankan tes, lalu (bila lulus) jalankan update.sh di VPS testing.
+# Setiap push ke main: jalankan tes, lalu (bila lulus) kirim ke hosting DomaiNesia (angeliaperfume.com).
 on:
   push:
     branches: [main]
@@ -8,7 +8,7 @@ on:
 
 # Deploy tidak boleh berjalan bersamaan; push berikutnya menunggu yang sebelumnya selesai
 concurrency:
-  group: deploy-vps
+  group: deploy-hosting
   cancel-in-progress: false
 
 jobs:
@@ -41,43 +41,13 @@ jobs:
       - name: php artisan test
         run: php artisan test
 
-  deploy:
-    name: Deploy ke VPS
-    needs: test
-    runs-on: ubuntu-latest
-    # VPS testing yang mati jangan menggantung berjam-jam: run berikutnya (termasuk deploy hosting) antre di belakangnya
-    timeout-minutes: 20
-    steps:
-      - name: Siapkan SSH
-        env:
-          SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
-          KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
-        run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-
-      # Kunci ini di VPS dibatasi hanya bisa menjalankan ~/angelia-perfume/update.sh
-      - name: Jalankan update.sh di VPS
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_USER: ${{ secrets.VPS_USER }}
-        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 "$VPS_USER@$VPS_HOST"
-
-      # Dicoba ulang beberapa kali: container butuh beberapa detik setelah dinyalakan ulang
-      - name: Cek situs
-        run: curl --fail --silent --show-error --output /dev/null --max-time 30 --retry 10 --retry-delay 3 --retry-all-errors https://angeliaperfume.duckdns.org/
-
   # Hosting klien (DomaiNesia Nimbus Go, cPanel). Server tidak punya Node, jadi vendor dan aset dibangun di sini
   # lalu dikirim dengan rsync. .env dan storage (foto produk, log, sesi) di server tidak pernah ditimpa.
   deploy-hosting:
     name: Deploy ke hosting DomaiNesia
     needs: test
     runs-on: ubuntu-latest
-    concurrency:
-      group: deploy-hosting
-      cancel-in-progress: false
+    timeout-minutes: 20
     env:
       HOSTING_HOST: ${{ secrets.HOSTING_HOST }}
       HOSTING_USER: ${{ secrets.HOSTING_USER }}
