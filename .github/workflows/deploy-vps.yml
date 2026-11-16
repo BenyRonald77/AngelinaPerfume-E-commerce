@@ -45,6 +45,8 @@ jobs:
     name: Deploy ke VPS
     needs: test
     runs-on: ubuntu-latest
+    # VPS testing yang mati jangan menggantung berjam-jam: run berikutnya (termasuk deploy hosting) antre di belakangnya
+    timeout-minutes: 20
     steps:
       - name: Siapkan SSH
         env:
@@ -61,7 +63,7 @@ jobs:
         env:
           VPS_HOST: ${{ secrets.VPS_HOST }}
           VPS_USER: ${{ secrets.VPS_USER }}
-        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes "$VPS_USER@$VPS_HOST"
+        run: ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes -o BatchMode=yes -o ConnectTimeout=30 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 "$VPS_USER@$VPS_HOST"
 
       # Dicoba ulang beberapa kali: container butuh beberapa detik setelah dinyalakan ulang
       - name: Cek situs
