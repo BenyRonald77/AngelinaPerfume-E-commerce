@@ -11,8 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Di hosting DomaiNesia, Nginx berada di depan Apache; header X-Forwarded-* dipercaya supaya URL
-        // dan aset tetap memakai https.
+        // Di hosting DomaiNesia Nginx berada di depan Apache, di VPS testing Caddy di depan container;
+        // header X-Forwarded-* dipercaya supaya URL dan aset tetap memakai https.
         $middleware->trustProxies(at: '*');
 
         // Webhook Xendit diverifikasi lewat x-callback-token, bukan token CSRF
