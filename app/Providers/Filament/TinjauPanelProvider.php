@@ -28,6 +28,8 @@ class TinjauPanelProvider extends PanelProvider
             ->id('tinjau')
             ->path('tinjau')
             ->login()
+            // Sesi login terpisah dari toko dan /admin (config/auth.php guard "tinjau")
+            ->authGuard('tinjau')
             ->brandName('Angelia Perfume')
             ->favicon('/favicon-32.png?v=3')
             ->colors([

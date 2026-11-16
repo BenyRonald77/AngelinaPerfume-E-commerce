@@ -10,6 +10,7 @@ use App\Models\ProductAroma;
 use App\Models\ProductVariant;
 use App\Models\Size;
 use App\Models\User;
+use Filament\Auth\Pages\Login;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Artisan;
@@ -35,7 +36,9 @@ class ReviewerPanelTest extends TestCase
             'shopee_variation_id' => '257302961070', 'price' => 20000, 'weight_grams' => 60, 'stock' => 4,
         ]);
 
-        $this->actingAs(User::factory()->create(['role' => Role::Peninjau]));
+        $reviewer = User::factory()->create(['role' => Role::Peninjau]);
+        // Masuk di toko (guard web) dan di panel peninjau (guard tinjau): tetap tidak bisa membuka /admin
+        $this->actingAs($reviewer)->actingAs($reviewer, 'tinjau');
 
         $this->get('/tinjau/stok')->assertOk()->assertSee('AP-0012-03-2ML')->assertSee('257302961070');
         $this->get('/admin')->assertForbidden();
@@ -49,11 +52,25 @@ class ReviewerPanelTest extends TestCase
             ->assertDontSee('Ubah stok');
     }
 
-    public function test_buyer_cannot_open_reviewer_panel(): void
+    public function test_buyer_session_shows_reviewer_login_instead_of_403(): void
     {
-        $this->actingAs(User::factory()->create());
+        $buyer = User::factory()->create();
+        $reviewer = User::factory()->create(['role' => Role::Peninjau]);
 
-        $this->get('/tinjau/stok')->assertForbidden();
+        // Sedang masuk sebagai pembeli di toko: /tinjau minta login peninjau, bukan 403
+        $this->actingAs($buyer)->get('/tinjau')->assertRedirect('/tinjau/login');
+        $this->get('/tinjau/login')->assertOk();
+
+        Filament::setCurrentPanel('tinjau');
+        Livewire::test(Login::class)
+            ->fillForm(['email' => $reviewer->email, 'password' => 'password'])
+            ->call('authenticate')
+            ->assertHasNoFormErrors();
+        $this->assertAuthenticatedAs($reviewer, 'tinjau');
+        $this->assertAuthenticatedAs($buyer, 'web');
+
+        // Akun pembeli tetap tidak boleh masuk panel peninjau
+        $this->actingAs($buyer, 'tinjau')->get('/tinjau/stok')->assertForbidden();
     }
 
     public function test_command_creates_account_and_rotates_password(): void

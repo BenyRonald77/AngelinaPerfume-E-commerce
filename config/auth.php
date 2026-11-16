@@ -40,6 +40,13 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Panel peninjau /tinjau punya login sendiri: browser yang sedang masuk sebagai pembeli
+        // tetap melihat form login peninjau, bukan halaman 403
+        'tinjau' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*
