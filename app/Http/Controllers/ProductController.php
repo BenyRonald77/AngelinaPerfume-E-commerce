@@ -9,6 +9,7 @@ use App\Models\ProductImage;
 use App\Models\ProductVariant;
 use App\Models\Setting;
 use App\Queries\ProductCards;
+use App\Services\CartService;
 use App\Support\FlashPrice;
 use App\Support\Promo;
 use App\Support\WhatsApp;
@@ -96,7 +97,7 @@ class ProductController extends Controller
                 ])->values(),
                 'initial' => ['aroma' => $initial->product_aroma_id, 'variant' => $initial->id],
                 'lowStock' => Setting::int('low_stock_threshold'),
-                'gift' => Promo::firstGiftThreshold(),
+                'gift' => $this->giftPayload($product),
                 'whatsapp' => WhatsApp::baseUrl(),
                 'productName' => $product->name,
                 'upcomingLabel' => $upcoming ? $upcoming->name.' ('.$upcoming->starts_at->locale('id')->translatedFormat('j F, H.i').' WIB)' : null,
@@ -105,6 +106,28 @@ class ProductController extends Controller
             'isDecant' => $isDecant,
             'hasBpom' => Str::contains((string) $product->description, 'BPOM', ignoreCase: true),
         ]);
+    }
+
+    /**
+     * Bar progres hadiah di halaman produk: aturan termurah yang berlaku untuk jenis produk ini
+     * (decant: hadiah random min. Rp100.000), ditambah isi keranjang yang ikut aturan itu.
+     *
+     * @return array{target: int, inCart: int, label: string, spend: string, note: ?string}|null
+     */
+    private function giftPayload(Product $product): ?array
+    {
+        $rule = Promo::ruleFor($product);
+        if (! $rule) {
+            return null;
+        }
+
+        return [
+            'target' => $rule->min_subtotal,
+            'inCart' => $rule->eligibleSubtotal(app(CartService::class)->lines()->pluck('item')),
+            'label' => $rule->giftLabel(),
+            'spend' => $rule->spendLabel(),
+            'note' => $rule->description,
+        ];
     }
 
     private function related(Product $product)

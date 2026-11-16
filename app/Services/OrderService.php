@@ -13,6 +13,7 @@ use App\Models\ProductVariant;
 use App\Models\Setting;
 use App\Models\User;
 use App\Notifications\OrderStatusChanged;
+use App\Support\Promo;
 use App\Shipping\ShippingOption;
 use App\Shipping\ShippingProvider;
 use Illuminate\Support\Collection;
@@ -35,7 +36,7 @@ class OrderService
     /**
      * Ringkasan untuk halaman checkout, dihitung dari isi keranjang saat ini.
      *
-     * @return array{lines: Collection, subtotal: int, weight: int, packaging_fee: int, gifts: Collection, options: list<ShippingOption>}
+     * @return array{lines: Collection, subtotal: int, weight: int, packaging_fee: int, gifts: Collection, progress: Collection, options: list<ShippingOption>}
      */
     public function quote(?Address $address, bool $packaging): array
     {
@@ -49,7 +50,8 @@ class OrderService
             'subtotal' => $subtotal,
             'weight' => $weight,
             'packaging_fee' => $packaging ? Setting::int('packaging_fee') : 0,
-            'gifts' => $this->gifts($lines->pluck('item'), $subtotal),
+            'gifts' => $this->gifts($lines->pluck('item')),
+            'progress' => Promo::progress($lines->pluck('item')),
             'options' => $address ? $this->shipping->options($address->province, $weight) : [],
         ];
     }
@@ -118,7 +120,7 @@ class OrderService
                 $this->addItem($order, $variant, $item->quantity, $variant->currentPrice(), false);
             }
 
-            foreach ($this->gifts($items->map(fn (CartItem $i) => $i->setRelation('variant', $variants[$i->product_variant_id])), $subtotal) as $rule) {
+            foreach ($this->gifts($items->map(fn (CartItem $i) => $i->setRelation('variant', $variants[$i->product_variant_id]))) as $rule) {
                 $gift = ProductVariant::whereKey($rule->gift_variant_id)->with(['product', 'aroma', 'size'])->lockForUpdate()->first();
                 if ($gift && $gift->stock > 0) {
                     $this->addItem($order, $gift, 1, 0, true);
@@ -155,22 +157,20 @@ class OrderService
     }
 
     /**
-     * Aturan hadiah aktif yang terpenuhi (F11). Kosongnya daftar produk berarti berlaku untuk semua.
+     * Aturan hadiah aktif yang terpenuhi (F11). Ambang dihitung dari subtotal barang yang ikut aturan
+     * (misalnya hanya decant); satu hadiah per aturan per pesanan, tidak berlaku kelipatan.
      *
      * @param  Collection<int, CartItem>  $items
      * @return Collection<int, GiftRule>
      */
-    public function gifts(Collection $items, int $subtotal): Collection
+    public function gifts(Collection $items): Collection
     {
-        $productIds = $items->map(fn (CartItem $i) => $i->variant->product_id)->unique();
-
         return GiftRule::where('is_active', true)
-            ->where('min_subtotal', '<=', $subtotal)
             ->whereNotNull('gift_variant_id')
-            ->with(['products:id', 'giftVariant.product'])
+            ->with(['products:id', 'category', 'giftVariant.product'])
             ->orderBy('min_subtotal')
             ->get()
-            ->filter(fn (GiftRule $rule) => $rule->products->isEmpty() || $rule->products->pluck('id')->intersect($productIds)->isNotEmpty())
+            ->filter(fn (GiftRule $rule) => $rule->eligibleSubtotal($items) >= $rule->min_subtotal)
             ->filter(fn (GiftRule $rule) => $rule->giftVariant?->stock > 0)
             ->values();
     }

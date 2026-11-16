@@ -276,6 +276,54 @@ class CheckoutFlowTest extends TestCase
             ->assertHasErrors(['form.province', 'form.address_line']);
     }
 
+    public function test_decant_gift_counts_only_decant_and_is_not_multiplied(): void
+    {
+        GiftRule::create([
+            'name' => 'Hadiah random', 'description' => 'Bisa decant, gantungan, atau item lain.',
+            'gift_variant_id' => $this->gift->id, 'min_subtotal' => 100000, 'is_active' => true,
+            'category_id' => Category::where('slug', Category::DECANT)->value('id'),
+        ]);
+        [$user] = $this->buyerWithAddress();
+        $this->actingAs($user);
+
+        // Bar decant hanya di halaman produk decant
+        $this->get('/produk/zataru-signature')->assertOk()->assertSee('Belanja decant menuju hadiah random');
+        $this->get('/produk/mykonos-penthouse')->assertOk()->assertDontSee('menuju hadiah random');
+        $this->get('/')->assertSee('Belanja decant min. Rp100.000, dapat hadiah random.');
+
+        // Full size Rp450.000 tidak ikut dihitung; decant 4 × Rp20.000 = Rp80.000
+        $this->post('/keranjang', ['variant_id' => $this->fullSize->id, 'quantity' => 1]);
+        $this->post('/keranjang', ['variant_id' => $this->decant->id, 'quantity' => 4]);
+        $this->get('/keranjang')->assertOk()
+            ->assertSee('Belanja decant')->assertSee('Rp80.000')->assertSee('Rp20.000')
+            ->assertSee('Hanya produk decant yang dihitung')
+            ->assertDontSee('Kamu dapat hadiah random');
+
+        // Decant Rp200.000: tetap satu hadiah, tidak berlaku kelipatan
+        $this->post('/keranjang', ['variant_id' => $this->decant->id, 'quantity' => 6]);
+        $this->get('/keranjang')->assertSee('Kamu dapat hadiah random');
+        Livewire::test(Checkout::class)->assertSee('Kamu dapat hadiah random')->call('place')->assertHasNoErrors();
+
+        $order = Order::latest('id')->first();
+        $this->assertSame(1, (int) $order->items->where('is_gift', true)->sum('quantity'));
+        $this->assertSame(2, $this->gift->fresh()->stock);
+    }
+
+    public function test_full_size_alone_does_not_earn_decant_gift(): void
+    {
+        GiftRule::create([
+            'name' => 'Hadiah random', 'gift_variant_id' => $this->gift->id, 'min_subtotal' => 100000, 'is_active' => true,
+            'category_id' => Category::where('slug', Category::DECANT)->value('id'),
+        ]);
+        [$user] = $this->buyerWithAddress();
+        $this->actingAs($user)->post('/keranjang', ['variant_id' => $this->fullSize->id, 'quantity' => 1]);
+
+        // Keranjang tanpa decant: bar decant tidak tampil, pesanan tanpa hadiah
+        $this->get('/keranjang')->assertOk()->assertDontSee('Belanja decant');
+        Livewire::test(Checkout::class)->call('place')->assertHasNoErrors();
+        $this->assertFalse(Order::latest('id')->first()->items->contains('is_gift', true));
+    }
+
     public function test_admin_order_pages_open(): void
     {
         $order = $this->placeOrder();

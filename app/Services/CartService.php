@@ -21,7 +21,8 @@ class CartService
     public function current(bool $create = false): ?Cart
     {
         if ($user = auth()->user()) {
-            return $create ? Cart::firstOrCreate(['user_id' => $user->id]) : $user->cart;
+            // Query langsung, bukan relasi $user->cart: relasi yang sudah dimuat (mis. masih kosong) bisa basi
+            return $create ? Cart::firstOrCreate(['user_id' => $user->id]) : Cart::where('user_id', $user->id)->first();
         }
 
         $token = session(self::SESSION_KEY);

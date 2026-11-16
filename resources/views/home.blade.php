@@ -114,11 +114,14 @@
         <section class="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-12">
             <div data-reveal class="flex flex-wrap items-center justify-between gap-6 rounded-[32px] border border-blush bg-white p-7 sm:p-12">
                 <div class="flex max-w-2xl flex-col gap-2">
-                    <h2 class="font-display text-[26px] leading-tight sm:text-4xl">Belanja min. {{ Rupiah::format($first->min_subtotal) }}, dapat {{ \Illuminate\Support\Str::lower(preg_replace('/\s*\(.*\)$/', '', $first->name)) }}.</h2>
+                    <h2 class="font-display text-[26px] leading-tight sm:text-4xl">{{ $first->spendLabel() }} min. {{ Rupiah::format($first->min_subtotal) }}, dapat {{ $first->giftLabel() }}.</h2>
                     <p class="text-[17px]">
+                        @if ($first->description)
+                            {{ $first->description }}
+                        @endif
                         Hadiah masuk ke pesanan otomatis, tanpa perlu diklaim.
                         @foreach ($giftRules->skip(1) as $rule)
-                            Belanja min. {{ Rupiah::format($rule->min_subtotal) }} dapat {{ \Illuminate\Support\Str::lower(preg_replace('/\s*\(.*\)$/', '', $rule->name)) }}.
+                            {{ $rule->spendLabel() }} min. {{ Rupiah::format($rule->min_subtotal) }} dapat {{ $rule->giftLabel() }}.
                         @endforeach
                     </p>
                 </div>

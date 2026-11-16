@@ -25,15 +25,15 @@ class CartPage extends Component
         return $this->lines->sum(fn ($line) => $line['item']->lineTotal());
     }
 
-    /** Hadiah yang sudah didapat dan target hadiah berikutnya */
+    /** Hadiah yang sudah didapat dan progres menuju tiap hadiah (decant dihitung terpisah) */
     #[Computed]
     public function gift(): array
     {
         $items = $this->lines->pluck('item');
 
         return [
-            'earned' => $items->isEmpty() ? collect() : app(OrderService::class)->gifts($items, $this->subtotal),
-            'next' => Promo::giftRules()->first(fn ($rule) => $rule->min_subtotal > $this->subtotal),
+            'earned' => $items->isEmpty() ? collect() : app(OrderService::class)->gifts($items),
+            'progress' => Promo::progress($items),
         ];
     }
 

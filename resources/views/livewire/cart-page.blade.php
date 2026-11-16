@@ -3,7 +3,6 @@
 
     $count = $this->lines->sum(fn ($line) => $line['item']->quantity);
     $hasProblem = $this->lines->contains(fn ($line) => $line['problem']);
-    $next = $this->gift['next'];
 @endphp
 
 <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 pb-20 pt-8 sm:px-6 lg:px-8">
@@ -86,16 +85,7 @@
                     </div>
                 </dl>
 
-                @if ($next)
-                    @php($pct = min(100, (int) round($this->subtotal / $next->min_subtotal * 100)))
-                    <div class="flex flex-col gap-2 rounded-2xl bg-blush/45 px-4 py-3.5">
-                        <p class="text-[15px] font-medium">Tambah {{ Rupiah::format($next->min_subtotal - $this->subtotal) }} lagi untuk dapat {{ lcfirst($next->name) }}.</p>
-                        <span class="block h-2 overflow-hidden rounded-full bg-white" role="progressbar" aria-label="Menuju {{ lcfirst($next->name) }}"
-                              aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ $pct }}">
-                            <span class="block h-full rounded-full bg-ink" style="width: {{ $pct }}%"></span>
-                        </span>
-                    </div>
-                @endif
+                <x-gift-progress :progress="$this->gift['progress']" />
 
                 @if ($hasProblem)
                     <button type="button" class="btn-primary h-14 w-full" disabled aria-describedby="info-masalah">Lanjut ke checkout</button>

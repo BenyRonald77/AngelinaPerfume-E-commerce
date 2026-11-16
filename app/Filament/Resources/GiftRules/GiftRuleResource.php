@@ -61,6 +61,16 @@ class GiftRuleResource extends Resource
                         ->mapWithKeys(fn (ProductVariant $v) => [$v->id => "{$v->product->name} (stok {$v->stock})"]))
                     ->helperText('Hadiah diambil dari produk berjenis Hadiah supaya stoknya ikut berkurang.')
                     ->required(),
+                Select::make('category_id')
+                    ->label('Berlaku untuk jenis')
+                    ->relationship('category', 'name', fn ($query) => $query->where('slug', '!=', Category::HADIAH)->orderBy('sort_order'))
+                    ->placeholder('Semua jenis')
+                    ->helperText('Hanya subtotal produk jenis ini yang dihitung menuju minimum belanja (mis. Decant: full size tidak ikut).'),
+                TextInput::make('description')
+                    ->label('Keterangan hadiah')
+                    ->maxLength(160)
+                    ->placeholder('Bisa decant, gantungan, atau item lain. 1 hadiah per pesanan.')
+                    ->helperText('Tampil di bar progres keranjang, checkout, dan halaman produk.'),
                 Select::make('products')
                     ->label('Berlaku untuk produk')
                     ->relationship('products', 'name')
@@ -84,6 +94,9 @@ class GiftRuleResource extends Resource
                 TextColumn::make('min_subtotal')
                     ->label('Minimum belanja')
                     ->money('IDR', locale: 'id'),
+                TextColumn::make('category.name')
+                    ->label('Jenis dihitung')
+                    ->placeholder('Semua jenis'),
                 TextColumn::make('giftVariant.product.name')
                     ->label('Hadiah')
                     ->placeholder('Belum dipilih'),

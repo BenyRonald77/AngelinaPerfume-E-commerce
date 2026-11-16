@@ -154,6 +154,9 @@
                 </div>
             </dl>
 
+            {{-- Progres hadiah: decant dihitung terpisah dari full size (permintaan klien) --}}
+            <x-gift-progress :progress="$quote['progress']" />
+
             @error('checkout')
                 <p class="text-sm font-medium text-red-700" role="alert">{{ $message }}</p>
             @enderror

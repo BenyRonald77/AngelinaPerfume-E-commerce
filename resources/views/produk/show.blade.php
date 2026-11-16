@@ -201,10 +201,13 @@
                     @if ($payload['gift'])
                         <div class="flex flex-col gap-2 rounded-2xl bg-blush/45 px-5 py-3.5">
                             <p class="text-[15px] font-medium" x-text="giftText"></p>
-                            <span class="block h-2 overflow-hidden rounded-full bg-white" role="progressbar" aria-label="Menuju free decant"
+                            <span class="block h-2 overflow-hidden rounded-full bg-white" role="progressbar" aria-label="{{ $payload['gift']['spend'] }} menuju {{ $payload['gift']['label'] }}"
                                   aria-valuemin="0" aria-valuemax="100" :aria-valuenow="giftPct">
                                 <span class="block h-full rounded-full bg-ink" :style="'width: ' + giftPct + '%'"></span>
                             </span>
+                            @if ($payload['gift']['note'])
+                                <p class="text-sm text-ink-soft">{{ $payload['gift']['note'] }}</p>
+                            @endif
                         </div>
                     @endif
 
@@ -320,12 +323,16 @@
                     },
                     get maxQty() { const v = this.variant; return Math.max(1, Math.min(v.stock, v.limit ?? v.stock)); },
                     get subtotal() { return this.variant.price * this.qty; },
-                    get giftPct() { return this.gift ? Math.min(100, Math.round(this.subtotal / this.gift * 100)) : 0; },
+                    // Progres hadiah: isi keranjang yang ikut aturan (mis. decant) + pilihan di halaman ini
+                    get giftCurrent() { return this.gift ? this.gift.inCart + this.subtotal : 0; },
+                    get giftPct() { return this.gift ? Math.min(100, Math.floor(this.giftCurrent / this.gift.target * 100)) : 0; },
                     get giftText() {
                         if (! this.gift) return '';
-                        return this.subtotal >= this.gift
-                            ? 'Pesanan ini dapat free decant otomatis.'
-                            : 'Tambah ' + this.rp(this.gift - this.subtotal) + ' lagi untuk dapat free decant.';
+                        const sisa = this.gift.target - this.giftCurrent;
+                        const keranjang = this.gift.inCart > 0 ? ' (sudah ' + this.rp(this.gift.inCart) + ' di keranjang)' : '';
+                        return sisa <= 0
+                            ? this.gift.spend + ' ' + this.rp(this.giftCurrent) + keranjang + ': kamu dapat ' + this.gift.label + '.'
+                            : this.gift.spend + ' ' + this.rp(this.giftCurrent) + ' dari ' + this.rp(this.gift.target) + keranjang + '. Tambah ' + this.rp(sisa) + ' lagi untuk dapat ' + this.gift.label + '.';
                     },
                     get waLink() {
                         const text = 'Halo Angelia Perfume, apakah ' + this.productName + ' aroma ' + this.aroma.name

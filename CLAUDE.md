@@ -27,7 +27,7 @@ Laravel 12 (PHP 8.2+), MySQL/MariaDB, Filament (panel admin di `/admin`), Blade 
 3. Kode SKU dibuat saat impor: `AP-<nomor produk 4 digit>-<nomor aroma 2 digit>-<ml>ML`, misalnya `AP-0012-03-2ML`. Kode produk dan kode variasi Shopee tetap disimpan untuk pencocokan (sinkron stok nanti).
 4. Ukuran tetap: 0,5 dan 1 ml (vial oles), 2/3/5/10 ml (spray), 15 ml (travel size), 37/50/100 ml (botol asli). Nama variasi Shopee "Aroma,Ukuran" dipecah di koma sebelum angka ukuran (ukuran memakai koma desimal, "Topaz,0,5mL (vial oles)").
 5. Pembeli **wajib punya akun** (tidak ada guest checkout). Satu admin (pemilik); peran staf gudang disiapkan saja.
-6. Hadiah otomatis: free decant untuk belanja min. Rp100.000, free tester untuk min. Rp400.000; tercatat Rp0 di pesanan. Listing GWP Shopee bukan produk katalog.
+6. Hadiah otomatis: **hadiah random** (decant, gantungan, atau item lain; SKU "Mystery Gift") untuk belanja **decant** min. Rp100.000 (full size tidak dihitung, 1 hadiah per pesanan, tidak kelipatan), free tester untuk total belanja min. Rp400.000; tercatat Rp0 di pesanan. Aturan hadiah bisa dibatasi per jenis (`gift_rules.category_id`); bar progres di keranjang, checkout, dan halaman produk (`components/gift-progress`). Listing GWP Shopee bukan produk katalog.
 7. Batas beli per SKU (full size MYKONOS 1 botol per pesanan). Extra dus/bubble wrap = opsi checkout Rp1.700.
 8. Stok berkurang saat pesanan dibuat; pesanan tidak dibayar 24 jam batal otomatis dan stok kembali. Stok tidak boleh minus.
 9. Jangan menampilkan data yang belum pasti. Stok habis tampil "Stok habis" dengan tombol tanya via WhatsApp. Data yang belum ada pakai placeholder, misalnya `[NOMOR TOKO]`.
