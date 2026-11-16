@@ -98,6 +98,10 @@
 
     <x-banner-carousel />
 
+    @if ($flashSale)
+        <x-flash-sale :sale="$flashSale" />
+    @endif
+
     <section id="katalog" aria-labelledby="judul-katalog" class="mx-auto flex max-w-7xl flex-col gap-7 px-4 pb-10 pt-14 sm:px-6 lg:px-12">
         <h2 id="judul-katalog" data-reveal class="font-display text-[30px] leading-tight lg:text-[40px]">Pilihan untukmu</h2>
         <div data-reveal style="--reveal-delay: 120ms">

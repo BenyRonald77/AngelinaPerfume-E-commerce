@@ -9,6 +9,7 @@ use App\Models\ProductImage;
 use App\Models\ProductVariant;
 use App\Models\Setting;
 use App\Queries\ProductCards;
+use App\Support\FlashPrice;
 use App\Support\Promo;
 use App\Support\WhatsApp;
 use Illuminate\Database\Eloquent\Builder;
@@ -49,6 +50,10 @@ class ProductController extends Controller
 
         $isDecant = $product->category->slug === Category::DECANT;
 
+        // Flash sale akan datang yang memuat SKU produk ini: harganya diberitahukan, belum berlaku
+        $upcoming = FlashPrice::upcomingFor($variants->pluck('id'));
+        $upcomingPrices = $upcoming?->items()->whereIn('product_variant_id', $variants->pluck('id'))->pluck('sale_price', 'product_variant_id') ?? collect();
+
         return view('produk.show', [
             'product' => $product,
             'aromas' => $aromas,
@@ -77,7 +82,11 @@ class ProductController extends Controller
                     'size' => $v->size?->label,
                     'kind' => $isDecant ? $v->size?->bottle_type->label() : null,
                     'note' => $v->note,
-                    'price' => $v->price,
+                    // price = yang dibayar sekarang (harga flash bila sale berlangsung), normal = harga biasa
+                    'price' => $v->currentPrice(),
+                    'normal' => $v->price,
+                    'flash' => FlashPrice::for($v)?->flashSale->name,
+                    'upcoming' => ($p = $upcomingPrices->get($v->id)) && $p < $v->price ? $p : null,
                     'stock' => $v->stock,
                     'limit' => $v->max_per_order,
                     'weight' => $v->weight_grams,
@@ -90,6 +99,7 @@ class ProductController extends Controller
                 'gift' => Promo::firstGiftThreshold(),
                 'whatsapp' => WhatsApp::baseUrl(),
                 'productName' => $product->name,
+                'upcomingLabel' => $upcoming ? $upcoming->name.' ('.$upcoming->starts_at->locale('id')->translatedFormat('j F, H.i').' WIB)' : null,
             ],
             'related' => $this->related($product),
             'isDecant' => $isDecant,

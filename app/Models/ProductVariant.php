@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\StockReason;
+use App\Support\FlashPrice;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -63,6 +64,12 @@ class ProductVariant extends Model
     public function isAvailable(): bool
     {
         return $this->is_active && $this->stock > 0;
+    }
+
+    /** Harga yang dibayar sekarang: harga flash sale bila SKU ini ikut flash sale yang sedang berlangsung */
+    public function currentPrice(): int
+    {
+        return FlashPrice::for($this)?->sale_price ?? $this->price;
     }
 
     /**

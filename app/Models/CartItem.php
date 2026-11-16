@@ -24,8 +24,9 @@ class CartItem extends Model
         return $this->belongsTo(ProductVariant::class, 'product_variant_id');
     }
 
+    /** Memakai harga flash sale bila sedang berlangsung */
     public function lineTotal(): int
     {
-        return $this->variant->price * $this->quantity;
+        return $this->variant->currentPrice() * $this->quantity;
     }
 }

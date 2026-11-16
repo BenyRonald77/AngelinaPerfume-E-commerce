@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BrandOrigin;
 use App\Models\Brand;
+use App\Models\FlashSale;
 use App\Models\Product;
 use App\Queries\ProductCards;
 use App\Support\Promo;
@@ -27,6 +28,10 @@ class HomeController extends Controller
             'collections' => $this->collections(),
             'brandCount' => Brand::whereHas('products', fn (Builder $q) => $q->visible())->count(),
             'giftRules' => Promo::giftRules(),
+            // Flash sale tanggal kembar: yang sedang berlangsung, atau yang akan datang dengan hitung mundur
+            'flashSale' => FlashSale::forHome()?->load([
+                'items.variant' => fn ($q) => $q->with(['product.cover', 'product.brand', 'aroma', 'size']),
+            ]),
         ]);
     }
 

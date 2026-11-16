@@ -93,7 +93,19 @@
                     </p>
                 </div>
 
-                <p class="text-[40px] font-bold leading-none" x-text="rp(variant.price)">{{ Rupiah::format($initial->price) }}</p>
+                @php($initialFlash = \App\Support\FlashPrice::for($initial))
+                <div class="flex flex-col gap-2">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                        <p class="text-[40px] font-bold leading-none" x-text="rp(variant.price)">{{ Rupiah::format($initial->currentPrice()) }}</p>
+                        {{-- Flash sale sedang berlangsung: harga normal dicoret --}}
+                        <span x-show="variant.flash" @unless ($initialFlash) style="display: none" @endunless class="text-xl text-ink-soft line-through" x-text="rp(variant.normal)">{{ Rupiah::format($initial->price) }}</span>
+                        <span x-show="variant.flash" @unless ($initialFlash) style="display: none" @endunless class="rounded-full bg-ink px-3 py-1 text-sm font-semibold text-cream" x-text="variant.flash">{{ $initialFlash?->flashSale->name }}</span>
+                    </div>
+                    {{-- Flash sale akan datang: harga khusus diberitahukan, belum berlaku sekarang --}}
+                    <p x-show="variant.upcoming && upcomingLabel" style="display: none" class="text-[15px]">
+                        <span class="font-semibold" x-text="variant.upcoming && rp(variant.upcoming)"></span> di <span x-text="upcomingLabel"></span>
+                    </p>
+                </div>
 
                 {{-- Notes aroma: kotak bergaris putus-putus seperti di foto varian toko --}}
                 <div x-show="hasNotes" @if (! $initialAroma->hasNotes()) style="display: none" @endif class="card-dashed grid gap-4 p-5 sm:grid-cols-3">
@@ -150,7 +162,7 @@
                                         @if ($v->stock === 0)
                                             Habis
                                         @else
-                                            {{ $isDecant && $v->size ? $v->size->bottle_type->label().' · ' : '' }}{{ Rupiah::format($v->price) }}
+                                            {{ $isDecant && $v->size ? $v->size->bottle_type->label().' · ' : '' }}{{ Rupiah::format($v->currentPrice()) }}
                                         @endif
                                     </span>
                                 </button>
@@ -180,7 +192,7 @@
                             <button type="button" @click="qty = Math.min(maxQty, qty + 1)" :disabled="qty >= maxQty" aria-label="Tambah jumlah"
                                     class="h-11 w-11 rounded-full bg-cream text-[22px] transition-colors enabled:hover:bg-blush disabled:text-ink-soft/50">+</button>
                         </div>
-                        <span class="text-sm text-ink-soft">Subtotal <span x-text="rp(subtotal)">{{ Rupiah::format($initial->price) }}</span></span>
+                        <span class="text-sm text-ink-soft">Subtotal <span x-text="rp(subtotal)">{{ Rupiah::format($initial->currentPrice()) }}</span></span>
                         <span x-show="variant.limit" @if (! $initial->max_per_order) style="display: none" @endif class="text-sm text-ink-soft">
                             Maks. <span x-text="variant.limit">{{ $initial->max_per_order }}</span> botol per pesanan
                         </span>

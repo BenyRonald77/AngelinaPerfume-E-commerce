@@ -87,7 +87,8 @@ class OrderService
                 throw new CartException('Periksa keranjang: '.implode(' ', $problems));
             }
 
-            $subtotal = $items->sum(fn (CartItem $i) => $variants[$i->product_variant_id]->price * $i->quantity);
+            // Harga flash sale dihitung ulang di server saat pesanan dibuat; selewat jam sale kembali normal
+            $subtotal = $items->sum(fn (CartItem $i) => $variants[$i->product_variant_id]->currentPrice() * $i->quantity);
             $packagingFee = $packaging ? Setting::int('packaging_fee') : 0;
             $weight = $items->sum(fn (CartItem $i) => $variants[$i->product_variant_id]->weight_grams * $i->quantity)
                 + ($packaging ? Setting::int('packaging_weight_grams') : 0);
@@ -114,7 +115,7 @@ class OrderService
 
             foreach ($items as $item) {
                 $variant = $variants[$item->product_variant_id];
-                $this->addItem($order, $variant, $item->quantity, $variant->price, false);
+                $this->addItem($order, $variant, $item->quantity, $variant->currentPrice(), false);
             }
 
             foreach ($this->gifts($items->map(fn (CartItem $i) => $i->setRelation('variant', $variants[$i->product_variant_id])), $subtotal) as $rule) {

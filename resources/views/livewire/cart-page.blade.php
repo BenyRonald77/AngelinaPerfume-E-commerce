@@ -37,7 +37,10 @@
                                 <div class="flex min-w-0 flex-col gap-0.5">
                                     <a href="{{ route('produk.show', $product) }}?varian={{ $variant->sku }}" class="font-display text-lg leading-snug hover:underline">{{ $product->name }}</a>
                                     <p class="text-[15px] text-ink-soft">{{ $variant->aroma->name }}@if ($variant->size) · {{ $variant->size->label }}@endif</p>
-                                    @if ($item->quantity > 1)
+                                    @if ($variant->currentPrice() < $variant->price)
+                                        {{-- Harga flash sale sedang berlaku --}}
+                                        <p class="text-sm"><span class="font-semibold">{{ Rupiah::format($variant->currentPrice()) }}</span> per botol · <span class="text-ink-soft line-through">{{ Rupiah::format($variant->price) }}</span> <span class="font-semibold">{{ \App\Support\FlashPrice::for($variant)->flashSale->name }}</span></p>
+                                    @elseif ($item->quantity > 1)
                                         <p class="text-sm text-ink-soft">{{ Rupiah::format($variant->price) }} per botol</p>
                                     @endif
                                 </div>
